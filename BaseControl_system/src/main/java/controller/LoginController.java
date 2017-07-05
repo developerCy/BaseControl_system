@@ -69,11 +69,8 @@ public class LoginController {
             session.setAttribute("user", user.get(0));
             session.setAttribute("user_name",username);
             session.setAttribute("login_type", user.get(0).getLogin_type());
-            String login_token = Md5Util.getMD5(String.valueOf((int) (Math.random() * 1000000000 + 1)));
-            Cookie cookie=new Cookie("login_token",login_token);
+            String login_token =request.getRemoteAddr();
             jedis.hset("login_token",username,login_token);
-            cookie.setMaxAge(3600*24*7);
-            response.addCookie(cookie);
             JsonUtil.sendJson(response, Config.SUCCESS);
         }catch (JedisConnectionException e){
             log.error("redis连接异常..");

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.Ps_schedule_mapper" >
+    <select id="insert_schedule" parameterType="pojo.Schedule">
+    INSERT INTO schedule (user_name,title,startTime,endTime,createTime)VALUES (#{user_name},#{title},#{startTime},#{endTime},#{createTime})
+    </select>
+    <select id="select_schedule_byId" parameterType="java.lang.String" resultType="pojo.Schedule">
+        SELECT * FROM schedule WHERE startTime=#{startTime}
+    </select>
+    <select id="select_all_schedule" parameterType="java.lang.String" resultType="pojo.Schedule">
+        SELECT * FROM schedule WHERE user_name=#{user_name};
+    </select>
+    <delete id="del_schedule" parameterType="java.util.HashMap" >
+        DELETE FROM schedule WHERE 1=1
+        <if test="id !=null">
+            AND id=#{id}
+        </if>
+        <if test="user_name !=null">
+            AND user_name=#{user_name}
+        </if>
+    </delete>
+    <update id="update_schedle" parameterType="pojo.Schedule">
+        UPDATE schedule SET title=#{title},startTime=#{startTime},createTime=#{createTime} WHERE id=#{id}
+    </update>
+</mapper>

@@ -7,6 +7,8 @@ import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.junit.Test;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import pojo.User;
 
 import java.io.*;
@@ -62,7 +64,7 @@ public class Junit_test {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
-    @Test
+    //@Test
     public void test_03(){
         Logger log=Logger.getLogger(Junit_test.class);
         User user=new User();
@@ -77,5 +79,8 @@ public class Junit_test {
         log.info(list.toString());
         JSONArray jsonArray=JSONArray.fromObject(list);
         log.info(jsonArray.toString());
+    }
+    public void test_say(){
+        System.out.println("Haha");
     }
 }

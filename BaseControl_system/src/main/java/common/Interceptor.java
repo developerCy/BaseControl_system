@@ -27,33 +27,24 @@ public class Interceptor implements HandlerInterceptor {
         try {
             if(!request.getRequestURI().startsWith("/user/login")){
                 log.info("发生路径检查："+request.getRequestURL());
-                /**
-                 * token验证
-                 */
                 Jedis jedis = new Jedis(Config.REDIS_IP,Config.REDIS_PORT);
-                Cookie cookies[] = request.getCookies();
-                String client_token = null;
-                for (int i = 0; i < cookies.length; i++) {
-                    if ("login_token".equals(cookies[i].getName())) {
-                        client_token = cookies[i].getValue();
-                        break;
-                    }
-                }
-                if (client_token == null || client_token == "") {
-                    response.sendRedirect(request.getContextPath());
-                    return false;
-                }
                 String token = jedis.hget("login_token", UserUtil.getUser_name(request));
-                if (!client_token.equals(token)) {
-                    response.sendRedirect(request.getContextPath());
-                    return false;
-                }
-
                 /**
                  * session是否过期
                  */
                 if(request.getSession().getAttribute("user")==null){
-                    request.getRequestDispatcher("welcome").forward(request,response);
+                    if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
+                        response.setHeader("session-status","timeout");
+                        response.getWriter().println(Config.SESSION_REFUESD);
+                    }else{
+                        response.sendRedirect(request.getContextPath());
+                    }
+                    return false;
+                    /**
+                     * 如果异地登陆，原地址将被踢出下线
+                     */
+                }else if(!request.getRemoteAddr().equals(token)){
+                    response.sendRedirect(request.getContextPath());
                     return false;
                 }
             }

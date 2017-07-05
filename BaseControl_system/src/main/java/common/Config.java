@@ -17,7 +17,7 @@ public class Config {
     //token无效
     public static final String TOKEN_REFUESD="{\"code\":\"-1\",\"desc\":\"token无效\"}";
     //session过期
-    public static final String SESSION_REFUESD="{\"code\":\"-1\",\"desc\":\"session过期\"}";
+    public static final String SESSION_REFUESD="{\"code\":\"-1\",\"desc\":\"登录超时,请重新登录！\"}";
     //服务端数据异常
     public static   String  ERROR(String message){
         return "{\"code\":-1,\"status\":\"false\",\"desc\":\""+message+"\"}";

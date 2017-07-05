@@ -28,7 +28,7 @@
         <h3 class="font-bold" style="font-size: large">不好意思</h3>
 
         <div class="error-desc" style="font-size: large">
-            服务器正在维护，预计需要1小时
+            服务器出了点小问题，请联系管理员  17712613272
         </div>
     </div>
 
