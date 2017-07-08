@@ -7,16 +7,25 @@
     <%
         String path = request.getContextPath();
     %>
-
     <!--表格-->
     <link rel="stylesheet" type="text/css" href="<%=path%>/scripts/chart/css/GridManager.css">
     <script type="text/javascript" src="<%=path%>/scripts/chart/js/GridManager.js"></script>
 </head>
 <body>
-<jsp:include page="../main_head.jsp"></jsp:include>
-<button class="btn btn-info btn-sm" style="margin-left: 10px;" data-toggle="modal" data-target="#create_user">添加用户
-</button>
-<table grid-manager="cccc"></table>
+<div class="wrap">
+    <jsp:include page="../index_head.jsp"/>
+    <div class="page-body">
+        <jsp:include page="../index_side.jsp"/>
+        <div class="content">
+            <button class="btn btn-info btn-sm" style="margin-left: 10px;" data-toggle="modal" data-target="#create_user">添加用户
+            </button>
+            <table grid-manager="cccc"></table>
+            <div class="row animated fadeInUp"></div>
+        </div>
+        <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
+    </div>
+</div>
+
 <!-- 创建用户弹出框 -->
 <div class="modal fade" id="create_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -26,104 +35,82 @@
                 <h4 class="modal-title">创建用户</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group text-center">
-                        <label for="user_name_2" class="col-sm-2">用户名：</label>
-                        <div class="col-sm-10">
-                            <input id="user_name_2" type="text" style="width: 400px;" name="user_name" required
-                                   class="form-control" placeholder="请输入用户名"/></label>
-                        </div>
-                    </div>
+                <form class="form-horizontal" action="/user/edit?sign=new" method="post">
                     <div class="form-group">
-                        <label for="login_type_2" class="col-sm-2">权限：</label>
+                        <label for="user_name" class="col-sm-2 control-label">权限</label>
                         <div class="col-sm-10">
-                            <select style="width: 400px;" class="form-control" id="login_type_2" name="login_type">
+                            <select  class="form-control" id="login_type" name="login_type">
                                 <option value="admin">管理员</option>
-                                <option value="user">用户</option>
+                                <option value="user" selected>用户</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="password_2" class="col-sm-2">密码：</label>
+                        <label for="user_name" class="col-sm-2 control-label">姓名<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input class="form-control" id="password_2" style="width:400px;" type="password"
-                                   name="password_2" required/></label>
+                            <input type="text" required class="form-control" id="user_name" name="user_name" placeholder="Name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="phone_2" class="col-sm-2">电话号码：</label>
+                        <label for="password" class="col-sm-2 control-label">密码<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input class="form-control" id="phone_2" style="width:400px;" type="tel" name="phone" required
-                            /></label>
+                            <input type="password" required class="form-control" id="password" name="password" placeholder="Password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="address_2" class="col-sm-2">地址：</label>
+                        <label for="email" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
-                            <input class="form-control" id="address_2" style="width:400px;" type="text" name="address"
-                                   required/></label>
+                            <input type="email"  class="form-control" id="email" name="email" placeholder="Email">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-2 control-label">手机号<span style="color: red">*</span></label>
+                        <div class="col-sm-10">
+                            <input type="tel"  required class="form-control" id="phone" name="phone" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-2 control-label">地址</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Address">
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="text-align: center">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确认</button>
                     </div>
                 </form>
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                            onclick="create_user($('#user_name_2').val(),$('#password_2').val(),$('#phone_2').val(),$('#address_2').val(),$('#login_type_2').val());">
-                        确认
-                    </button>
-                </div>
             </div>
 
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<!-- 签到弹出框 -->
-<div class="modal fade" id="del_confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!--删除确认框-->
+<div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="modal-error-label">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">确认</h4>
+            <div class="modal-header state modal-danger">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Danger Modal</h4>
             </div>
-            <div  class="modal-body">你确定要删除该用户吗</div>
-            <input type="hidden" value="" id="text"/>
+            <div class="modal-body">
+                你确定要移除该用户吗？
+                <input id="text" type="hidden">
+            </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="window.location.href='/user/edit?sign=del&user_name='+$('#text').val()">确定</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="del_confirm($('#text').val())">我想好了</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
+        </div>
+    </div>
 </div>
 </body>
 <script type="text/javascript">
-    function create_user(user_name, password, phone, address,login_type) {
-        if (user_name == "" || password == "") {
-            iziToast.info({
-                message: "不能为空",
-                timeout: "1000"
-            });
-            return;
-        }
-        $.ajax({
-            url: "/user/edit?sign=new",
-            dataType: "json",
-            type: "post",
-            data: {"user_name": user_name, "password": password, "phone": phone, "address": address,"login_type":login_type,"sign": "new"},
-            success: function (result) {
-                if (result.code == "1") {
-                    iziToast.success({
-                        message: "创建成功！",
-                        timeout: "1000"
-                    });
-                    window.location.reload();
-                } else {
-                    iziToast.error({
-                        message: result.desc,
-                        timeout: "1000"
-                    });
-                }
-            }
+    function del(user_name) {
+        $('#del').modal({
+            keyboard: true
         });
+        $('#text').val(user_name);
     }
     //初始化表格数据
     $(function () {
@@ -132,18 +119,18 @@
         table.GM({
             ajax_url: '/user/edit?sign=sel'
             , ajax_type: 'get'
-            , textAlign: 'center'
+            , textAlign: "center"
             , supportCheckbox: false
             , supportRemind: true
             , supportExport: true
             , columnData: [
                 {
                     key: 'logo',
-                    width: '20%',
+                    width: '10%',
                     text: '头像',
                 }, {
                     key: 'user_name',
-                    width: '10%',
+                    width: '20%',
                     text: '用户名'
                 }, {
                     key: 'phone',
@@ -155,14 +142,18 @@
                     text: '地址'
                 }, {
                     key: 'login_type',
-                    width: '20%',
+                    width: '5%',
                     text: '权限'
                 }, {
+                    key: 'email',
+                    width: '20%',
+                    text: '邮箱'
+                },{
                     key: 'operation',
-                    width: '10%',
+                    width: '5%',
                     text: 'operation',
                     template: function (user_name, rowObject) {  //operation:当前key所对应的单条数据；rowObject：单个一行完整数据
-                        return '<a href="#" onclick="del(\'' + rowObject.user_name + '\');">移除</a>';
+                        return '<a href="#" onclick="del(\'' + rowObject.user_name + '\');">移除</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="window.location.href=\'/user/edit?sign=sel_one&user_name='+rowObject.user_name +'\'">编辑</a>';
                     }
 
                 }
@@ -208,31 +199,7 @@
             return fmt;
         }
     })
-    function del(user_name) {
-        $('#del_confirm').modal({
-            keyboard: true
-        });
-        $('#text').val(user_name);
-    }
-    function del_confirm(user_name) {
-        $.ajax({
-            url: "/user/edit?sign=del&user_name=" + user_name,
-            type: "get",
-            dataType: "json",
-            success: function (result) {
-                if (result.code == "1") {
-                    iziToast.error({
-                        message: "删除成功！"
-                    });
-                    window.location.reload();
-                } else {
-                    iziToast.error({
-                        message: result.desc
-                    });
-                }
-            }
-        });
-    }
+
 </script>
 </body>
 </html>

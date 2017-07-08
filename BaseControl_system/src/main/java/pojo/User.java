@@ -10,8 +10,17 @@ public class User implements Serializable{
     private String pass_word;
     private String phone;
     private String address;
+    private String email;
     private String logo;
     private String login_type;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUser_name() {
         return user_name;

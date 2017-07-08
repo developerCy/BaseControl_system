@@ -89,7 +89,7 @@ public class LoginController {
      * @param response
      */
     @RequestMapping("/edit")
-    public void user_edit(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView user_edit(Model model,HttpServletRequest request, HttpServletResponse response) {
         try {
             if ("del".equals(request.getParameter("sign"))) {
                 ps_userinfo_service.del_user(request.getParameter("user_name"));
@@ -97,20 +97,13 @@ public class LoginController {
                 Map<String,String> map=new HashMap<String, String>();
                 map.put("user_name",request.getParameter("user_name"));
                 ps_schedule_service.del_schedule(map);
-                JsonUtil.sendJson(response, Config.SUCCESS);
-                return;
+                return new ModelAndView("user_group");
             }
             if("sel_one".equals(request.getParameter("sign"))){
-                List<User> users = ps_userinfo_service.select_user_byName(UserUtil.getUser_name(request));
+                List<User> users = ps_userinfo_service.select_user_byName(request.getParameter("user_name"));
                 User user=users.get(0);
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("logo",StringUtil.defaultString(user.getLogo(),"未上传"));
-                jsonObject.put("user_name", user.getUser_name());
-                jsonObject.put("phone", StringUtil.defaultString(user.getPhone(), "暂无"));
-                jsonObject.put("address", StringUtil.defaultString(user.getAddress(), "暂无"));
-                jsonObject.put("login_type", StringUtil.defaultString(user.getLogin_type(), "暂无"));
-                JsonUtil.sendJson(response,"{\"code\":\"1\",\"data\":"+jsonObject.toString()+"}");
-                return;
+                model.addAttribute("user_info",user);
+                return new ModelAndView("user_info");
             }
             if ("sel".equals(request.getParameter("sign"))) {
                 List<User> users = ps_userinfo_service.select_user_byName("");
@@ -123,13 +116,12 @@ public class LoginController {
                         jsonObject.put("phone", StringUtil.defaultString(user.getPhone(), "暂无"));
                         jsonObject.put("address", StringUtil.defaultString(user.getAddress(), "暂无"));
                         jsonObject.put("login_type", StringUtil.defaultString(user.getLogin_type(), "暂无"));
+                        jsonObject.put("email", StringUtil.defaultString(user.getEmail(), "暂无"));
                         jsonArray.add(jsonObject);
                     }
                     JsonUtil.sendJson(response,Config.DATA_RETURN(jsonArray));
-                    return;
                 }
                 JsonUtil.sendJson(response, Config.DATA_RETURN(JSONArray.fromObject("[]")));
-                return;
             }
             String user_name = UserUtil.getUser_name(request);
             String password = request.getParameter("password");
@@ -137,12 +129,14 @@ public class LoginController {
             String address = request.getParameter("address");
             String logo = request.getParameter("logo");
             String login_type = request.getParameter("login_type");
+            String email=request.getParameter("email");
             User user = new User();
             user.setUser_name(user_name);
             user.setPhone(phone);
             user.setAddress(address);
             user.setPass_word(Md5Util.getMD5(password));
             user.setLogin_type(login_type);
+            user.setEmail(email);
             if (logo != null || logo != "") {
                 user.setLogo(logo);
             }
@@ -151,23 +145,21 @@ public class LoginController {
               List<User> list=ps_userinfo_service.select_user_byName(user_name);
                 if(!list.isEmpty()){
                     JsonUtil.sendJson(response, Config.USER_EXIST);
-                    return;
                 }
                 user.setUser_name(user_name);
                 ps_userinfo_service.insert_user(user);
-                JsonUtil.sendJson(response, Config.SUCCESS);
-                return;
+               return new ModelAndView("user_group");
             }
             if ("edit".equals(request.getParameter("sign"))) {
                 ps_userinfo_service.update_user_byName(user);
-                JsonUtil.sendJson(response, Config.SUCCESS);
-                return;
+                return new ModelAndView("user_group");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
         }
+        return null;
     }
 
     /**
@@ -182,7 +174,7 @@ public class LoginController {
             Jedis jedis = new Jedis(Config.REDIS_IP, Config.REDIS_PORT);
             jedis.hdel("login_token", UserUtil.getUser_name(request));
             request.getSession().invalidate();
-            response.sendRedirect("/welcome.jsp");
+            response.sendRedirect("/login.html");
         }catch (JedisConnectionException e){
             log.error("redis连接异常..");
             JsonUtil.sendJson(response,Config.ERROR("redis连接异常.."));

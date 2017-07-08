@@ -40,7 +40,7 @@
 		balloon: false,
 		close: true,
 		rtl: false,
-		position: 'topCenter', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+		position: 'bottomRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
 		target: '',
 		timeout: 5000,
 		pauseOnHover: true,
@@ -49,10 +49,10 @@
 		progressBarColor: '',
 		animateInside: true,
 		buttons: {},
-		transitionIn: 'fadeInUp', // bounceInLeft, bounceInRight, bounceInUp, bounceInDown, fadeIn, fadeInDown, fadeInUp, fadeInLeft, fadeInRight, flipInX
+		transitionIn: 'fadeIn', // bounceInLeft, bounceInRight, bounceInUp, bounceInDown, fadeIn, fadeInDown, fadeInUp, fadeInLeft, fadeInRight, flipInX
 		transitionOut: 'fadeOut', // fadeOut, fadeOutUp, fadeOutDown, fadeOutLeft, fadeOutRight, flipOutX
-		transitionInMobile: 'fadeInUp',
-		transitionOutMobile: 'fadeOutDown',
+		transitionInMobile: 'fadeIn',
+		transitionOutMobile: 'fadeOut',
 		onOpen: function () {},
 		onClose: function () {}
 	};

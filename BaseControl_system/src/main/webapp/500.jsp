@@ -13,13 +13,13 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="shortcut icon" href="favicon.ico">
-    <link href="<%=path%>/500/bootstrap.min.css?v=3.3.6" rel="stylesheet">
-    <link href="<%=path%>/500/font-awesome.css?v=4.4.0" rel="stylesheet">
-    <link href="<%=path%>/500/animate.css" rel="stylesheet">
-    <link href="<%=path%>/500/style.css?v=4.1.0" rel="stylesheet">
+    <link href="<%=path%>/scripts/500/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="<%=path%>/scripts/500/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="<%=path%>/scripts/500/animate.css" rel="stylesheet">
+    <link href="<%=path%>/scripts/500/style.css?v=4.1.0" rel="stylesheet">
     <!-- 全局js -->
-    <script src="<%=path%>/500/js/jquery.min.js?v=2.1.4"></script>
-    <script src="<%=path%>/500/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="<%=path%>/scripts/500/js/jquery.min.js?v=2.1.4"></script>
+    <script src="<%=path%>/scripts/500/js/bootstrap.min.js?v=3.3.6"></script>
 </head>
 <body class="gray-bg">
 

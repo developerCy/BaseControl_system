@@ -28,23 +28,17 @@ public class Interceptor implements HandlerInterceptor {
             if(!request.getRequestURI().startsWith("/user/login")){
                 log.info("发生路径检查："+request.getRequestURL());
                 Jedis jedis = new Jedis(Config.REDIS_IP,Config.REDIS_PORT);
-                String token = jedis.hget("login_token", UserUtil.getUser_name(request));
                 /**
                  * session是否过期
                  */
                 if(request.getSession().getAttribute("user")==null){
-                    if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
-                        response.setHeader("session-status","timeout");
-                        response.getWriter().println(Config.SESSION_REFUESD);
-                    }else{
-                        response.sendRedirect(request.getContextPath());
-                    }
-                    return false;
+                        response.sendRedirect("/login.html");
+                        return false;
                     /**
                      * 如果异地登陆，原地址将被踢出下线
                      */
-                }else if(!request.getRemoteAddr().equals(token)){
-                    response.sendRedirect(request.getContextPath());
+                }else if(!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getUser_name(request)))){
+                    response.sendRedirect("/login.html");
                     return false;
                 }
             }

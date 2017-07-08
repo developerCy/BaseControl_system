@@ -35,7 +35,7 @@
 	<mvc:resources mapping="/scripts/**" location="/scripts/"/>
 	<mvc:resources mapping="/page/**" location="/page/"/>
 	<mvc:resources mapping="/sql/**" location="/sql/"/>
-	<mvc:resources mapping="/welcome.html" location="/welcome.html"/>
+	<mvc:resources mapping="/login.html" location="/login.html"/>
 	<mvc:resources mapping="/main_head.jsp" location="/main_head.jsp"/>
 </beans>
 

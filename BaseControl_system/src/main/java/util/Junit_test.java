@@ -64,22 +64,17 @@ public class Junit_test {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
-    //@Test
+    @Test
     public void test_03(){
         Logger log=Logger.getLogger(Junit_test.class);
-        User user=new User();
-        user.setUser_name("changyu");
-        user.setPhone("177");
-        User user2=new User();
-        user.setUser_name("chan12121gyu");
-        user.setPhone("1772121");
-        List<User> list=new ArrayList<User>();
-        list.add(user);
-        list.add(user2);
+        List<String> list=new ArrayList<String>();
+        list.add("123");
+        list.add("1234");
         log.info(list.toString());
         JSONArray jsonArray=JSONArray.fromObject(list);
         log.info(jsonArray.toString());
     }
+    //@Test
     public void test_say(){
         System.out.println("Haha");
     }
