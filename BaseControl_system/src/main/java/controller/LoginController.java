@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import pojo.Schedule;
 import pojo.User;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
-import service.Ps_schedule_service;
 import service.Ps_userinfo_service;
 import util.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -37,40 +34,38 @@ public class LoginController {
     private static Logger log = Logger.getLogger(LoginController.class);
     @Autowired
     private Ps_userinfo_service ps_userinfo_service;
-    @Autowired
-    private Ps_schedule_service ps_schedule_service;
 
     /**
      * 登陆
      *
-     * @param username
-     * @param password
+     * @param user_name
+     * @param pass_word
      * @param request
      * @param response
      */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public void Login(@RequestParam(value = "username", required = true) String username, @RequestParam(value = "password", required = true) String password, HttpServletRequest request, HttpServletResponse response) {
+    public void Login(@RequestParam(value = "user_name", required = true) String user_name, @RequestParam(value = "pass_word", required = true) String pass_word, HttpServletRequest request, HttpServletResponse response) {
         try {
             Jedis jedis=new Jedis(Config.REDIS_IP,Config.REDIS_PORT);
-            if (username == null || password == null) {
+            if (user_name == null || pass_word == null) {
                 JsonUtil.sendJson(response, Config.LOGIN_FALSE);
                 return;
             }
-            List<User> user = ps_userinfo_service.select_user_byName(username);
+            List<User> user = ps_userinfo_service.select_user_byName(user_name);
             if (user.isEmpty()) {
                 JsonUtil.sendJson(response, Config.LOGIN_FALSE);
                 return;
             }
-            if (!Md5Util.getMD5(password).equalsIgnoreCase(user.get(0).getPass_word())) {
+            if (!Md5Util.getMD5(pass_word).equalsIgnoreCase(user.get(0).getPass_word())) {
                 JsonUtil.sendJson(response, Config.LOGIN_FALSE);
             }
 
             HttpSession session = request.getSession();
             session.setAttribute("user", user.get(0));
-            session.setAttribute("user_name",username);
+            session.setAttribute("user_name",user_name);
             session.setAttribute("login_type", user.get(0).getLogin_type());
             String login_token =request.getRemoteAddr();
-            jedis.hset("login_token",username,login_token);
+            jedis.hset("login_token",user_name,login_token);
             JsonUtil.sendJson(response, Config.SUCCESS);
         }catch (JedisConnectionException e){
             log.error("redis连接异常..");
@@ -96,7 +91,6 @@ public class LoginController {
                 ps_userinfo_service.del_work_sign(request.getParameter("user_name"));
                 Map<String,String> map=new HashMap<String, String>();
                 map.put("user_name",request.getParameter("user_name"));
-                ps_schedule_service.del_schedule(map);
                 return new ModelAndView("user_group");
             }
             if("sel_one".equals(request.getParameter("sign"))){
@@ -123,7 +117,7 @@ public class LoginController {
                 }
                 JsonUtil.sendJson(response, Config.DATA_RETURN(JSONArray.fromObject("[]")));
             }
-            String user_name = UserUtil.getUser_name(request);
+            String user_name =request.getParameter("user_name");
             String password = request.getParameter("password");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
@@ -141,10 +135,10 @@ public class LoginController {
                 user.setLogo(logo);
             }
             if ("new".equals(request.getParameter("sign"))) {
-                user_name=request.getParameter("user_name");
               List<User> list=ps_userinfo_service.select_user_byName(user_name);
                 if(!list.isEmpty()){
-                    JsonUtil.sendJson(response, Config.USER_EXIST);
+                    model.addAttribute("error",Config.USER_EXIST);
+                    return new ModelAndView("../error");
                 }
                 user.setUser_name(user_name);
                 ps_userinfo_service.insert_user(user);

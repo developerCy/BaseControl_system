@@ -13,7 +13,7 @@ public class Config {
     //成功
     public static final String SUCCESS="{\"code\":1,\"status\":\"success\"}";
     //用户存在
-    public static final String USER_EXIST="{\"code\":\"-1\",\"desc\":\"用户名已经存在！\"}";
+    public static final String USER_EXIST="用户名已经存在";
     //token无效
     public static final String TOKEN_REFUESD="{\"code\":\"-1\",\"desc\":\"token无效\"}";
     //session过期
@@ -30,4 +30,7 @@ public class Config {
     public static  final String REDIS_IP="localhost";
     //端口
     public static final int REDIS_PORT=6379;
+
+    //标签名称
+    public static final String TITLE="Base_control";
 }

@@ -1,4 +1,5 @@
 <%@ page import="util.DateUtil" %>
+<%@ page import="common.Config" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -7,6 +8,7 @@
     <%
         String path = request.getContextPath();
     %>
+    <title><%=Config.TITLE%></title>
     <!--表格-->
     <link rel="stylesheet" type="text/css" href="<%=path%>/scripts/chart/css/GridManager.css">
     <script type="text/javascript" src="<%=path%>/scripts/chart/js/GridManager.js"></script>
@@ -17,9 +19,23 @@
     <div class="page-body">
         <jsp:include page="../index_side.jsp"/>
         <div class="content">
-            <button class="btn btn-info btn-sm" style="margin-left: 10px;" data-toggle="modal" data-target="#create_user">添加用户
-            </button>
-            <table grid-manager="cccc"></table>
+            <div class="row animated fadeInUp">
+                <div class="col-md-12">
+                    <h4 class="section-subtitle"><b>用户信息</b> 编辑</h4>
+                    <div class="panel">
+                        <div class="panel-content">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-info btn-sm" style="margin-left: 10px;" data-toggle="modal"
+                                            data-target="#create_user">添加用户
+                                    </button>
+                                    <table grid-manager="cccc"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row animated fadeInUp"></div>
         </div>
         <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
@@ -39,34 +55,37 @@
                     <div class="form-group">
                         <label for="user_name" class="col-sm-2 control-label">权限</label>
                         <div class="col-sm-10">
-                            <select  class="form-control" id="login_type" name="login_type">
+                            <select class="form-control" id="login_type" name="login_type">
                                 <option value="admin">管理员</option>
                                 <option value="user" selected>用户</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="user_name" class="col-sm-2 control-label">姓名<span style="color: red">*</span></label>
+                        <label for="user_name" class="col-sm-2 control-label">姓名<span
+                                style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" required class="form-control" id="user_name" name="user_name" placeholder="Name">
+                            <input type="text" required class="form-control" id="user_name" name="user_name"
+                                   placeholder="Name">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="password" class="col-sm-2 control-label">密码<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input type="password" required class="form-control" id="password" name="password" placeholder="Password">
+                            <input type="password" required class="form-control" id="password" name="password"
+                                   placeholder="Password">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
-                            <input type="email"  class="form-control" id="email" name="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="phone" class="col-sm-2 control-label">手机号<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input type="tel"  required class="form-control" id="phone" name="phone" placeholder="Phone">
+                            <input type="tel" required class="form-control" id="phone" name="phone" placeholder="Phone">
                         </div>
                     </div>
                     <div class="form-group">
@@ -90,7 +109,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header state modal-danger">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Danger Modal</h4>
             </div>
             <div class="modal-body">
@@ -98,7 +118,9 @@
                 <input id="text" type="hidden">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="window.location.href='/user/edit?sign=del&user_name='+$('#text').val()">确定</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="window.location.href='/user/edit?sign=del&user_name='+$('#text').val()">确定
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -124,11 +146,7 @@
             , supportRemind: true
             , supportExport: true
             , columnData: [
-                {
-                    key: 'logo',
-                    width: '10%',
-                    text: '头像',
-                }, {
+               {
                     key: 'user_name',
                     width: '20%',
                     text: '用户名'
@@ -142,18 +160,18 @@
                     text: '地址'
                 }, {
                     key: 'login_type',
-                    width: '5%',
+                    width: '10%',
                     text: '权限'
                 }, {
                     key: 'email',
                     width: '20%',
                     text: '邮箱'
-                },{
+                }, {
                     key: 'operation',
-                    width: '5%',
+                    width: '10%',
                     text: 'operation',
                     template: function (user_name, rowObject) {  //operation:当前key所对应的单条数据；rowObject：单个一行完整数据
-                        return '<a href="#" onclick="del(\'' + rowObject.user_name + '\');">移除</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="window.location.href=\'/user/edit?sign=sel_one&user_name='+rowObject.user_name +'\'">编辑</a>';
+                        return '<a href="#" onclick="del(\'' + rowObject.user_name + '\');">移除</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="window.location.href=\'/user/edit?sign=sel_one&user_name=' + rowObject.user_name + '\'">编辑</a>';
                     }
 
                 }

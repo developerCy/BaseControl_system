@@ -32,23 +32,9 @@
                 <ul class="nav" id="main-nav">
                     <li class="active-item"><a href="index.html"><i class="fa fa-home" aria-hidden="true"></i><span>主页</span></a></li>
                     <li class="has-child-item close-item">
-                        <a><i class="fa fa-cubes" aria-hidden="true"></i><span>UI Elements</span></a>
+                        <a><i class="fa fa-cubes" aria-hidden="true"></i><span>待定菜单</span></a>
                         <ul class="nav child-nav level-1">
                             <li><a href="ui-elements_panels.html">Panels</a></li>
-                            <li><a href="ui-elements_accordions.html">Accordions</a></li>
-                            <li><a href="ui-elements_tabs.html">Tabs</a></li>
-                            <li><a href="ui-elements_buttons.html">Buttons</a></li>
-                            <li><a href="ui-elements_typography.html">Typography</a></li>
-                            <li><a href="ui-elements_alerts.html">Alerts</a></li>
-                            <li><a href="ui-elements_modals.html">Modals</a></li>
-                            <li class="has-child-item close-item">
-                                <a>Notifications</a>
-                                <ul class="nav child-nav level-2 ">
-                                    <li><a href="ui-elements_notifications-pnotify.html">PNotify</a></li>
-                                    <li><a href="ui-elements_notifications-toastr.html">Toastr</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="ui-elements_animations-appear.html">Animations</a></li>
                         </ul>
                     </li>
                 </ul>

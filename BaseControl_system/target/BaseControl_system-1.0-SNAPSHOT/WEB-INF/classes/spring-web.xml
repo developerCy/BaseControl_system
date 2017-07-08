@@ -36,7 +36,12 @@
 	<mvc:resources mapping="/page/**" location="/page/"/>
 	<mvc:resources mapping="/sql/**" location="/sql/"/>
 	<mvc:resources mapping="/login.html" location="/login.html"/>
-	<mvc:resources mapping="/main_head.jsp" location="/main_head.jsp"/>
+	<mvc:resources mapping="/404.jsp" location="/404.jsp"/>
+	<mvc:resources mapping="/500.jsp" location="/500.jsp"/>
+	<mvc:resources mapping="/index_head.jsp" location="/index_head.jsp"/>
+	<mvc:resources mapping="/index_side.jsp" location="/index_side.jsp"/>
+	<mvc:resources mapping="/error.jsp" location="/error.jsp"/>
+	<mvc:resources mapping="/forgot-password.html" location="/forgot-password"/>
 </beans>
 
 

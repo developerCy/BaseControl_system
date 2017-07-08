@@ -27,13 +27,13 @@
                     <form>
                         <div class="form-group mt-md">
                             <span class="input-with-icon">
-                                    <input type="text" class="form-control" id="username" name="username"  placeholder="Account">
+                                    <input type="text" class="form-control" id="user_name" name="user_name"  placeholder="Account">
                                     <i class="fa fa-user"></i>
                             </span>
                         </div>
                         <div class="form-group">
                                 <span class="input-with-icon">
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                        <input type="password" class="form-control" id="pass_word" name="pass_word" placeholder="Password">
                                         <i class="fa fa-key"></i>
                                     </span>
                         </div>
@@ -44,10 +44,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <a href="javascript:login($('#username').val(),$('#password').val());" class="btn btn-primary btn-block">登陆</a>
+                            <a href="javascript:login($('#user_name').val(),$('#pass_word').val());" class="btn btn-primary btn-block">登陆</a>
                         </div>
                         <div class="form-group text-center">
-                            <a href="pages_forgot-password.html">忘记了密码？</a>
+                            <a href="forgot-password.html">忘记了密码？</a>
                         </div>
                     </form>
                 </div>
@@ -65,8 +65,8 @@
 <script src="scripts/main_scripts/javascripts/template-script.min.js"></script>
 <script src="scripts/main_scripts/javascripts/template-init.min.js"></script>
 <script type="text/javascript">
-    function login(username,password) {
-        if(username=="" || password ==""){
+    function login(user_name,pass_word) {
+        if(user_name=="" || pass_word ==""){
             iziToast.warning({
                 message:'用户名密码不能为空！',
                 timeout:'3000',
@@ -78,7 +78,7 @@
             url:"/user/login",
             dataType:"json",
             type:"post",
-            data:{"username":username,"password":password},
+            data:{"user_name":user_name,"pass_word":pass_word},
             success:function (result) {
                 if(result.code=="1"){
                     iziToast.success({
@@ -100,7 +100,7 @@
     //回车提交事件
     $("body").keydown(function(event) {
         if (event.keyCode == "13") {//keyCode=13是回车键
-            login($('#username').val(), $('#password').val());
+            login($('#user_name').val(), $('#pass_word').val());
         }
     });
 </script>
