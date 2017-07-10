@@ -59,7 +59,10 @@ public class LoginController {
             if (!Md5Util.getMD5(pass_word).equalsIgnoreCase(user.get(0).getPass_word())) {
                 JsonUtil.sendJson(response, Config.LOGIN_FALSE);
             }
-
+            if("无效".equals(user.get(0).getStatus())){
+                JsonUtil.sendJson(response, Config.USER_FASLE);
+                return;
+            }
             HttpSession session = request.getSession();
             session.setAttribute("user", user.get(0));
             session.setAttribute("user_name",user_name);
@@ -88,7 +91,6 @@ public class LoginController {
         try {
             if ("del".equals(request.getParameter("sign"))) {
                 ps_userinfo_service.del_user(request.getParameter("user_name"));
-                ps_userinfo_service.del_work_sign(request.getParameter("user_name"));
                 Map<String,String> map=new HashMap<String, String>();
                 map.put("user_name",request.getParameter("user_name"));
                 return new ModelAndView("user_group");
@@ -101,29 +103,17 @@ public class LoginController {
             }
             if ("sel".equals(request.getParameter("sign"))) {
                 List<User> users = ps_userinfo_service.select_user_byName("");
-                if (!users.isEmpty()) {
-                    JSONArray jsonArray = new JSONArray();
-                    JSONObject jsonObject = new JSONObject();
-                    for (User user : users) {
-                        jsonObject.put("logo",StringUtil.defaultString(user.getLogo(),"未上传"));
-                        jsonObject.put("user_name", user.getUser_name());
-                        jsonObject.put("phone", StringUtil.defaultString(user.getPhone(), "暂无"));
-                        jsonObject.put("address", StringUtil.defaultString(user.getAddress(), "暂无"));
-                        jsonObject.put("login_type", StringUtil.defaultString(user.getLogin_type(), "暂无"));
-                        jsonObject.put("email", StringUtil.defaultString(user.getEmail(), "暂无"));
-                        jsonArray.add(jsonObject);
-                    }
-                    JsonUtil.sendJson(response,Config.DATA_RETURN(jsonArray));
-                }
-                JsonUtil.sendJson(response, Config.DATA_RETURN(JSONArray.fromObject("[]")));
+                    model.addAttribute("userinfo_list",users);
+                    return new ModelAndView("user_group");
             }
             String user_name =request.getParameter("user_name");
-            String password = request.getParameter("password");
+            String password = request.getParameter("pass_word");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String logo = request.getParameter("logo");
             String login_type = request.getParameter("login_type");
             String email=request.getParameter("email");
+            String status=request.getParameter("status");
             User user = new User();
             user.setUser_name(user_name);
             user.setPhone(phone);
@@ -131,10 +121,12 @@ public class LoginController {
             user.setPass_word(Md5Util.getMD5(password));
             user.setLogin_type(login_type);
             user.setEmail(email);
+            user.setStatus(status);
             if (logo != null || logo != "") {
                 user.setLogo(logo);
             }
             if ("new".equals(request.getParameter("sign"))) {
+                user.setCreate_time(DateUtil.getTimestamp(DateUtil.SIMPLE));
               List<User> list=ps_userinfo_service.select_user_byName(user_name);
                 if(!list.isEmpty()){
                     model.addAttribute("error",Config.USER_EXIST);
@@ -145,13 +137,15 @@ public class LoginController {
                return new ModelAndView("user_group");
             }
             if ("edit".equals(request.getParameter("sign"))) {
+                user.setModify_time(DateUtil.getTimestamp(DateUtil.SIMPLE));
                 ps_userinfo_service.update_user_byName(user);
                 return new ModelAndView("user_group");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
+            model.addAttribute(e.getMessage());
+            return new ModelAndView("../error");
         }
         return null;
     }

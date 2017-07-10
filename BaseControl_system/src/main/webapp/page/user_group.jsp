@@ -9,9 +9,6 @@
         String path = request.getContextPath();
     %>
     <title><%=Config.TITLE%></title>
-    <!--表格-->
-    <link rel="stylesheet" type="text/css" href="<%=path%>/scripts/chart/css/GridManager.css">
-    <script type="text/javascript" src="<%=path%>/scripts/chart/js/GridManager.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -19,17 +16,59 @@
     <div class="page-body">
         <jsp:include page="../index_side.jsp"/>
         <div class="content">
-            <div class="row animated fadeInUp">
+            <div class="row animated fadeInLeft">
                 <div class="col-md-12">
-                    <h4 class="section-subtitle"><b>用户信息</b> 编辑</h4>
+                    <h4 class="section-subtitle"><b>渠道商信息</b></h4>
                     <div class="panel">
                         <div class="panel-content">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <button class="btn btn-info btn-sm" style="margin-left: 10px;" data-toggle="modal"
-                                            data-target="#create_user">添加用户
+                                            data-target="#create_user">添加渠道商
                                     </button>
-                                    <table grid-manager="cccc"></table>
+                                    <div class="col-sm-12">
+                                        <h4 class="section-subtitle"><b>公告：</b></h4>
+                                        <p class="section-text">渠道商返佣费率按 <span class="code">xxxx计算</span></p>
+                                        <div class="panel">
+                                            <div class="panel-content">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-hover table-bordered text-center">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>渠道商</th>
+                                                            <th>类型</th>
+                                                            <th>手机号</th>
+                                                            <th>Email</th>
+                                                            <th>状态</th>
+                                                            <th>创建时间</th>
+                                                            <th>修改时间</th>
+                                                            <th>功能</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <c:forEach items="${userinfo_list}" var="user_info">
+                                                            <tr>
+                                                                <td>${user_info.user_name}</td>
+                                                                <td>${user_info.login_type}</td>
+                                                                <td>${user_info.phone}</td>
+                                                                <td>${user_info.email}</td>
+                                                                <td>${user_info.status}</td>
+                                                                <td>${user_info.create_time}</td>
+                                                                <td>${user_info.modify_time}</td>
+                                                                <td>
+                                                                    <div class="btn-group btn-group-xs">
+                                                                        <button class="btn btn-transparent" data-toggle="tooltip" data-placement="top" and title="编辑" onclick="window.location.href='/user/edit?sign=sel_one&user_name=${user_info.user_name}'"><i class="fa fa-pencil"></i></button>
+                                                                        <button class="btn btn-transparent" data-toggle="tooltip" data-placement="top" and title="删除" onclick="del('${user_info.user_name}');"><i class="fa fa-times"></i></button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -48,16 +87,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">创建用户</h4>
+                <h4 class="modal-title">创建渠道商</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" action="/user/edit?sign=new" method="post">
                     <div class="form-group">
-                        <label for="user_name" class="col-sm-2 control-label">权限</label>
+                        <label for="user_name" class="col-sm-2 control-label">权限<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="login_type" name="login_type">
-                                <option value="admin">管理员</option>
-                                <option value="user" selected>用户</option>
+                            <select class="form-control" id="login_type" name="login_type" required>
+                                <option value="" selected>请选择</option>
+                                <option value="管理员">管理员</option>
+                                <option value="渠道商" selected>渠道商</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_name" class="col-sm-2 control-label">状态<span style="color: red">*</span></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="有效" selected>有效</option>
+                                <option value="无效">无效</option>
                             </select>
                         </div>
                     </div>
@@ -72,7 +121,7 @@
                     <div class="form-group">
                         <label for="password" class="col-sm-2 control-label">密码<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input type="password" required class="form-control" id="password" name="password"
+                            <input type="password" required class="form-control" id="password" name="pass_word"
                                    placeholder="Password">
                         </div>
                     </div>
@@ -134,90 +183,6 @@
         });
         $('#text').val(user_name);
     }
-    //初始化表格数据
-    $(function () {
-        //获取签到内容
-        var table = document.querySelector('table[grid-manager]');
-        table.GM({
-            ajax_url: '/user/edit?sign=sel'
-            , ajax_type: 'get'
-            , textAlign: "center"
-            , supportCheckbox: false
-            , supportRemind: true
-            , supportExport: true
-            , columnData: [
-               {
-                    key: 'user_name',
-                    width: '20%',
-                    text: '用户名'
-                }, {
-                    key: 'phone',
-                    width: '20%',
-                    text: '手机号'
-                }, {
-                    key: 'address',
-                    width: '20%',
-                    text: '地址'
-                }, {
-                    key: 'login_type',
-                    width: '10%',
-                    text: '权限'
-                }, {
-                    key: 'email',
-                    width: '20%',
-                    text: '邮箱'
-                }, {
-                    key: 'operation',
-                    width: '10%',
-                    text: 'operation',
-                    template: function (user_name, rowObject) {  //operation:当前key所对应的单条数据；rowObject：单个一行完整数据
-                        return '<a href="#" onclick="del(\'' + rowObject.user_name + '\');">移除</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="window.location.href=\'/user/edit?sign=sel_one&user_name=' + rowObject.user_name + '\'">编辑</a>';
-                    }
-
-                }
-            ]
-            , pagingBefore: function (query) {
-                console.log('Event: 分页前', query);
-            }
-            , pagingAfter: function (query) {
-                console.log('Event: 分页后', query);
-            }
-            , sortingBefore: function (query) {
-                console.log('Event: 排序前', query);
-            }
-            , sortingAfter: function (query) {
-                console.log('Event: 排序后', query);
-            }
-            , ajax_success: function (data) {
-                console.log('Event: ajax_success', data);
-            }
-        });
-
-        // 日期格式化,不是插件的代码,只用于处理时间格式化
-        Date.prototype.format = function (fmt) {
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "D+": this.getDate(), //日
-                "d+": this.getDate(), //日
-                "H+": this.getHours(), //小时
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/([Y,y]+)/.test(fmt)) {
-                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            }
-            for (var k in o) {
-                if (new RegExp("(" + k + ")").test(fmt)) {
-                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                }
-            }
-            return fmt;
-        }
-    })
-
 </script>
 </body>
 </html>

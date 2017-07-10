@@ -104,11 +104,7 @@
             <div class="user-options dropdown-box">
                 <div class="drop-content basic">
                     <ul>
-                        <c:if test="${sessionScope.login_type eq 'admin'}">
-                            <li> <a href="<%=path%>/page/user_group.jsp"><i class="fa fa-user" aria-hidden="true"></i> 用户组</a></li>
-                        </c:if>
-                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
-
+                        <li><a href="<%=path%>/user/edit?sign=sel_one&user_name=<%=UserUtil.getUser_name(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
                     </ul>
                 </div>
             </div>

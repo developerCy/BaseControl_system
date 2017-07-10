@@ -12,4 +12,8 @@ public class UserUtil {
         User user = (User) request.getSession().getAttribute("user");
         return user.getUser_name();
     }
+    public static String getLogin_type(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        return user.getLogin_type();
+    }
 }

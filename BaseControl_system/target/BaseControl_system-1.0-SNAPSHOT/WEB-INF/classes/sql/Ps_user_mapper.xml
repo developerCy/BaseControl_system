@@ -8,10 +8,10 @@
         </if>
     </select>
     <update id="update_user_byName" parameterType="pojo.User">
-        UPDATE user SET phone=#{phone},address=#{address},login_type=#{login_type},logo=#{logo},pass_word=#{pass_word},email=#{email} WHERE user_name=#{user_name}
+        UPDATE user SET phone=#{phone},address=#{address},login_type=#{login_type},logo=#{logo},pass_word=#{pass_word},email=#{email},status=#{status},modify_time=#{modify_time} WHERE user_name=#{user_name}
     </update>
     <insert id="insert_user" parameterType="pojo.User">
-        INSERT INTO user (user_name,pass_word,login_type,logo,phone,address,email) VALUES (#{user_name},#{pass_word},#{login_type},#{logo},#{phone},#{address},#{email})
+        INSERT INTO user (user_name,pass_word,login_type,logo,phone,address,email,status,create_time) VALUES (#{user_name},#{pass_word},#{login_type},#{logo},#{phone},#{address},#{email},#{status},#{create_time})
     </insert>
     <delete id="del_user" parameterType="java.lang.String">
         DELETE FROM user WHERE user_name=#{user_name}

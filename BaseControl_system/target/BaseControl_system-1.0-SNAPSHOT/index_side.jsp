@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -16,7 +17,6 @@
     <link rel="stylesheet" href="<%=path%>/scripts/main_scripts/vendor/toastr/toastr.min.css">
     <link rel="stylesheet" href="<%=path%>/scripts/main_scripts/vendor/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="<%=path%>/scripts/main_scripts/stylesheets/css/style.css">
-
 </head>
 <body>
 <div class="left-sidebar">
@@ -31,12 +31,23 @@
             <nav>
                 <ul class="nav" id="main-nav">
                     <li class="active-item"><a href="index.html"><i class="fa fa-home" aria-hidden="true"></i><span>主页</span></a></li>
-                    <li class="has-child-item close-item">
-                        <a><i class="fa fa-cubes" aria-hidden="true"></i><span>待定菜单</span></a>
-                        <ul class="nav child-nav level-1">
-                            <li><a href="ui-elements_panels.html">Panels</a></li>
-                        </ul>
-                    </li>
+                    <c:if test="${sessionScope.login_type eq '管理员'}">
+                        <li class="has-child-item close-item">
+                            <a><i class="fa fa-cubes" aria-hidden="true"></i><span>渠道商管理</span></a>
+                            <ul class="nav child-nav level-1">
+                                    <li><a href="<%=path%>/user/edit?sign=sel">渠道商信息</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
+                        <li class="has-child-item close-item">
+                            <a><i class="fa fa-cubes" aria-hidden="true"></i><span>入网信息审核</span></a>
+                            <ul class="nav child-nav level-1">
+                                    <li><a href="<%=path%>/etps/etpsinfo_list">商户信息</a></li>
+                                <c:if test="${sessionScope.login_type eq '管理员'}">
+                                    <li><a href="<%=path%>/etps/etpsinfo_list">入网审核</a></li>
+                                </c:if>
+                            </ul>
+                        </li>
                 </ul>
             </nav>
         </div>

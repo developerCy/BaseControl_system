@@ -16,7 +16,7 @@
     <div class="page-body">
         <jsp:include page="../index_side.jsp"/>
         <div class="content">
-            <div class="row animated fadeInUp">
+            <div class="row animated fadeInLeft">
                 <div class="col-md-12">
                     <h4 class="section-subtitle"><b>用户信息</b> 编辑</h4>
                     <div class="panel">
@@ -34,14 +34,29 @@
                                         <div class="form-group">
                                             <label for="login_type" class="col-sm-2 control-label">权限<span style="color: red">*</span></label>
                                             <div class="col-sm-10">
-                                                <select class="form-control" id="login_type" name="login_type">
-                                                    <c:if test="${user_info.login_type eq 'admin'}">
-                                                        <option value="admin" selected>管理员</option>
-                                                        <option value="user" selected>用户</option>
+                                                <select class="form-control" id="login_type" name="login_type" required>
+                                                    <c:if test="${user_info.login_type eq '管理员'}">
+                                                        <option value="管理员" selected>管理员</option>
+                                                        <option value="渠道商">渠道商</option>
                                                     </c:if>
-                                                    <c:if test="${user_info.login_type eq 'user'}">
-                                                        <option value="user" selected>用户</option>
-                                                        <option value="admin">管理员</option>
+                                                    <c:if test="${user_info.login_type eq '渠道商'}">
+                                                        <option value="管理员">管理员</option>
+                                                        <option value="渠道商" selected>渠道商</option>
+                                                    </c:if>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="user_name" class="col-sm-2 control-label">状态<span style="color: red">*</span></label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="status" name="status" required>
+                                                    <c:if test="${user_info.status eq '有效'}">
+                                                        <option value="有效" selected>有效</option>
+                                                        <option value="无效">无效</option>
+                                                    </c:if>
+                                                    <c:if test="${user_info.status eq '无效'}">
+                                                        <option value="有效">有效</option>
+                                                        <option value="无效" selected>无效</option>
                                                     </c:if>
                                                 </select>
                                             </div>

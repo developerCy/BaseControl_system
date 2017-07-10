@@ -10,6 +10,8 @@ import java.util.List;
 public class Config {
     //失败
     public static final String LOGIN_FALSE="{\"code\":-1,\"status\":\"false\",\"desc\":\"无效的用户名或密码！\"}";
+    //用户状态无效
+    public static final String USER_FASLE="{\"code\":-1,\"status\":\"false\",\"desc\":\"用户被停用！\"}";
     //成功
     public static final String SUCCESS="{\"code\":1,\"status\":\"success\"}";
     //用户存在
