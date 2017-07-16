@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="dao.Ps_user_mapper" >
-    <select id="select_user_byName" parameterType="java.lang.String" resultType="pojo.User">
+    <select id="select_user_byName" parameterType="java.util.HashMap" resultType="pojo.User">
         SELECT * FROM user
-        <if test="_parameter !=null and _parameter !=''">
-        WHERE user_name=#{user_name}
+        <if test="iAgent_id !=null and iAgent_id !=''">
+        WHERE iAgent_id=#{iAgent_id}
+        </if>
+        <if test="iAgent_name !=null and iAgent_name !=''">
+            WHERE iAgent_name=#{iAgent_name}
         </if>
     </select>
     <update id="update_user_byName" parameterType="pojo.User">
-        UPDATE user SET phone=#{phone},address=#{address},login_type=#{login_type},logo=#{logo},pass_word=#{pass_word},email=#{email},status=#{status},modify_time=#{modify_time} WHERE user_name=#{user_name}
+        UPDATE user SET phone=#{phone},address=#{address},login_type=#{login_type},logo=#{logo},pass_word=#{pass_word},email=#{email},status=#{status},modify_time=#{modify_time} WHERE iAgent_id=#{iAgent_id}
     </update>
     <insert id="insert_user" parameterType="pojo.User">
-        INSERT INTO user (user_name,pass_word,login_type,logo,phone,address,email,status,create_time) VALUES (#{user_name},#{pass_word},#{login_type},#{logo},#{phone},#{address},#{email},#{status},#{create_time})
+        INSERT INTO user (iAgent_name,pass_word,login_type,logo,phone,address,email,status,create_time) VALUES (#{iAgent_name},#{pass_word},#{login_type},#{logo},#{phone},#{address},#{email},#{status},#{create_time})
     </insert>
     <delete id="del_user" parameterType="java.lang.String">
-        DELETE FROM user WHERE user_name=#{user_name}
+        DELETE FROM user WHERE iAgent_id=#{iAgent_id}
+    </delete>
+    <insert id="insert_message" parameterType="java.util.HashMap" >
+        INSERT INTO message_table (iAgent_id,message,create_time) VALUES (#{iAgent_id},#{message},#{create_time})
+    </insert>
+    <select id="select_message" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT * FROM message_table WHERE iAgent_id=#{iAgent_id}
+    </select>
+    <delete id="del_message" parameterType="java.lang.String">
+        DELETE FROM message_table WHERE id=#{id}
     </delete>
 </mapper>

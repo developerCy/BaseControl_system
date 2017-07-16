@@ -2,7 +2,7 @@
 <%@ page import="common.Config" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <html>
 <head>
     <%
@@ -23,12 +23,12 @@
                         <div class="panel-content">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <form class="form-horizontal form-stripe" action="/user/edit?sign=edit" method="post">
+                                    <form class="form-horizontal form-stripe" action="/user/edit?sign=edit&iAgent_id=${user_info.iAgent_id}" method="post">
                                         <h6 class="mb-xlg text-center"><b>请在此编辑</b></h6>
                                         <div class="form-group">
-                                            <label for="user_name" class="col-sm-2 control-label">用户名<span style="color: red">*</span></label>
+                                            <label for="iAgent_name" class="col-sm-2 control-label">用户名<span style="color: red">*</span></label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" value="${user_info.user_name}" id="user_name" name="user_name" readonly placeholder="Name" type="text">
+                                                <input class="form-control" value="${user_info.iAgent_name}" id="iAgent_name" name="iAgent_name" readonly placeholder="Name" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="user_name" class="col-sm-2 control-label">状态<span style="color: red">*</span></label>
+                                            <label for="status" class="col-sm-2 control-label">状态<span style="color: red">*</span></label>
                                             <div class="col-sm-10">
                                                 <select class="form-control" id="status" name="status" required>
                                                     <c:if test="${user_info.status eq '有效'}">
@@ -98,7 +98,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row animated fadeInUp"></div>
         </div>
         <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
     </div>

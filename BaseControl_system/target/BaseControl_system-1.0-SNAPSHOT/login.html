@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en" class="fixed accounts sign-in">
+<html lang="en" class="fixed accounts lock-screen">
 
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="scripts/main_scripts/vendor/animate.css/animate.css">
     <link rel="stylesheet" href="scripts/main_scripts/stylesheets/css/style.css">
 </head>
-<body style="background-color: #0d8ddb">
+<body>
 <div class="wrap">
     <div class="page-body animated slideInDown">
         <div class="logo">
@@ -25,6 +25,15 @@
             <div class="panel mb-none">
                 <div class="panel-content bg-scale-0">
                     <form>
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                <select  style="text-align:center" class="form-control" id="login_type" name="login_type" placeholder="请选择" >
+                                    <option value="商户">商户</option>
+                                    <option value="管理员|渠道商">管理员|渠道商</option>
+                                </select>
+                            <i class="fa fa-shield"></i>
+                            </span>
+                        </div>
                         <div class="form-group mt-md">
                             <span class="input-with-icon">
                                     <input type="text" class="form-control" id="user_name" name="user_name"  placeholder="Account">
@@ -38,13 +47,15 @@
                                     </span>
                         </div>
                         <div class="form-group">
+                            <!--
                             <div class="checkbox-primary">
                                 <input type="checkbox" id="remember-me" value="option1" checked>
                                 <label for="remember-me">记住我</label>
                             </div>
+                            -->
                         </div>
                         <div class="form-group">
-                            <a href="javascript:login($('#user_name').val(),$('#pass_word').val());" class="btn btn-primary btn-block">登陆</a>
+                            <a href="javascript:login($('#user_name').val(),$('#pass_word').val(),$('#login_type').val());" class="btn btn-primary btn-block">登陆</a>
                         </div>
                         <div class="form-group text-center">
                             <a href="forgot-password.html">忘记了密码？</a>
@@ -65,8 +76,8 @@
 <script src="scripts/main_scripts/javascripts/template-script.min.js"></script>
 <script src="scripts/main_scripts/javascripts/template-init.min.js"></script>
 <script type="text/javascript">
-    function login(user_name,pass_word) {
-        if(user_name=="" || pass_word ==""){
+    function login(user_name,pass_word,login_type) {
+        if(user_name=="" || pass_word =="" ||login_type==""){
             iziToast.warning({
                 message:'用户名密码不能为空！',
                 timeout:'3000',
@@ -78,7 +89,7 @@
             url:"/user/login",
             dataType:"json",
             type:"post",
-            data:{"user_name":user_name,"pass_word":pass_word},
+            data:{"user_name":user_name,"pass_word":pass_word,"login_type":login_type},
             success:function (result) {
                 if(result.code=="1"){
                     iziToast.success({
@@ -100,7 +111,7 @@
     //回车提交事件
     $("body").keydown(function(event) {
         if (event.keyCode == "13") {//keyCode=13是回车键
-            login($('#user_name').val(), $('#pass_word').val());
+            login($('#user_name').val(), $('#pass_word').val(),$('#login_type').val());
         }
     });
 </script>

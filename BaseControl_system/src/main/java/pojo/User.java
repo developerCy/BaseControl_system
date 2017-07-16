@@ -6,7 +6,8 @@ import java.io.Serializable;
  * Created by changyu on 2017/6/19 0019.
  */
 public class User implements Serializable{
-    private String user_name;
+    private String iAgent_id;
+    private String iAgent_name;
     private String pass_word;
     private String phone;
     private String address;
@@ -16,6 +17,14 @@ public class User implements Serializable{
     private String status;
     private String create_time;
     private String modify_time;
+
+    public String getiAgent_id() {
+        return iAgent_id;
+    }
+
+    public void setiAgent_id(String iAgent_id) {
+        this.iAgent_id = iAgent_id;
+    }
 
     public String getCreate_time() {
         return create_time;
@@ -49,12 +58,12 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getiAgent_name() {
+        return iAgent_name;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setiAgent_name(String iAgent_name) {
+        this.iAgent_name = iAgent_name;
     }
 
     public String getPass_word() {

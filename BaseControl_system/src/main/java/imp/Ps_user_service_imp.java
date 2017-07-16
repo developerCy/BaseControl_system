@@ -16,8 +16,8 @@ import java.util.Map;
 public class Ps_user_service_imp implements Ps_userinfo_service{
     @Autowired
     private Ps_user_mapper ps_user_mapper;
-    public List<User> select_user_byName(String user_name) {
-        return ps_user_mapper.select_user_byName(user_name);
+    public List<User> select_user_byName(Map<String,String> map) {
+        return ps_user_mapper.select_user_byName(map);
     }
 
     public void insert_user(User user) {
@@ -28,27 +28,20 @@ public class Ps_user_service_imp implements Ps_userinfo_service{
         ps_user_mapper.update_user_byName(user);
     }
 
-    public void del_user(String user_name) {
-        ps_user_mapper.del_user(user_name);
+    public void del_user(String iAgent_id) {
+        ps_user_mapper.del_user(iAgent_id);
     }
 
-    public void del_work_sign(String user_name) {
-        ps_user_mapper.del_work_sign(user_name);
+    public void insert_message(Map<String, String> map) {
+        ps_user_mapper.insert_message(map);
     }
 
-    public void insert_work_start(Map<String, String> map) {
-        ps_user_mapper.insert_work_start(map);
+    public List<Map<String, String>> select_message(String iAgent_id) {
+        return ps_user_mapper.select_message(iAgent_id);
     }
 
-    public void update_work(Map<String, String> map) {
-        ps_user_mapper.update_work(map);
+    public void del_message(String id) {
+        ps_user_mapper.del_message(id);
     }
 
-    public List<Map<String, String>> select_work_sign_byUser(String user_name) {
-       return ps_user_mapper.select_work_sign_byUser(user_name);
-    }
-
-    public int select_max_id(String user_name) {
-        return ps_user_mapper.select_max_id(user_name);
-    }
 }

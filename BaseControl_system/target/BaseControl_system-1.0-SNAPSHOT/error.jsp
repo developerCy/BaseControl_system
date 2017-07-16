@@ -23,8 +23,8 @@
                                         <div class="col-sm-8 col-sm-offset-2">
                                             <div class="panel mt-xlg">
                                                 <div class="panel-content">
-                                                    <h1 class="error-number">error！</h1>
-                                                    <h2 class="error-name">失败！</h2>
+                                                    <h1 class="error-number">oh No！</h1>
+                                                    <h2 class="error-name">出错喽！</h2>
                                                     <p class="error-text">${error}</p>
                                                     <div class="row mt-lg">
                                                         <div class="col-sm-6  col-sm-offset-3">

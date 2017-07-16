@@ -4,6 +4,7 @@ import common.Config;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
+import org.apache.xpath.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import pojo.EtpsInfo;
 import pojo.User;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+import service.Ps_etps_service;
 import service.Ps_userinfo_service;
 import util.*;
 
+import javax.security.sasl.SaslServer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,6 +38,8 @@ public class LoginController {
     private static Logger log = Logger.getLogger(LoginController.class);
     @Autowired
     private Ps_userinfo_service ps_userinfo_service;
+    @Autowired
+    private Ps_etps_service ps_etps_service;
 
     /**
      * 登陆
@@ -43,36 +49,72 @@ public class LoginController {
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public void Login(@RequestParam(value = "user_name", required = true) String user_name, @RequestParam(value = "pass_word", required = true) String pass_word, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public void Login(@RequestParam(value = "user_name") String user_name,
+                      @RequestParam(value = "pass_word") String pass_word,
+                      @RequestParam(value = "login_type") String login_type,
+                      HttpServletRequest request, HttpServletResponse response) {
         try {
-            Jedis jedis=new Jedis(Config.REDIS_IP,Config.REDIS_PORT);
+            HttpSession session = request.getSession();
+            Jedis jedis = new Jedis(Config.REDIS_IP, Config.REDIS_PORT);
             if (user_name == null || pass_word == null) {
                 JsonUtil.sendJson(response, Config.LOGIN_FALSE);
                 return;
             }
-            List<User> user = ps_userinfo_service.select_user_byName(user_name);
-            if (user.isEmpty()) {
-                JsonUtil.sendJson(response, Config.LOGIN_FALSE);
-                return;
+            if("商户".equals(login_type)){
+                Map<String,String> map=new HashMap<String, String>();
+                map.put("etps_name",user_name);
+                List<EtpsInfo> list=ps_etps_service.select_etpsinfo(map);
+                if(list.isEmpty()){
+                    JsonUtil.sendJson(response, Config.LOGIN_FALSE);
+                    return;
+                }
+                if (!Md5Util.getMD5(pass_word).equalsIgnoreCase(list.get(0).getEtps_login_password())) {
+                    JsonUtil.sendJson(response, Config.LOGIN_FALSE);
+                    return;
+                }
+                session.setAttribute("user",list.get(0));
+                session.setAttribute("login_type","商户");
+                session.setAttribute("iEtps_id",list.get(0).getiEtps_id());
+            }else{
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("iAgent_name", user_name);
+                List<User> user = ps_userinfo_service.select_user_byName(map);
+                if (user.isEmpty()) {
+                    JsonUtil.sendJson(response, Config.LOGIN_FALSE);
+                    return;
+                }
+                if (!Md5Util.getMD5(pass_word).equalsIgnoreCase(user.get(0).getPass_word())) {
+                    JsonUtil.sendJson(response, Config.LOGIN_FALSE);
+                    return;
+                }
+                if ("无效".equals(user.get(0).getStatus())) {
+                    JsonUtil.sendJson(response, Config.USER_FASLE);
+                    return;
+                }
+                session.setAttribute("user", user.get(0));
+                session.setAttribute("iAgent_name", user_name);
+                session.setAttribute("login_type", user.get(0).getLogin_type());
+                session.setAttribute("iAgent_id", user.get(0).getiAgent_id());
+                /**
+                 * 获取站内信
+                 */
+                List<Map<String, String>> message_list = ps_userinfo_service.select_message(user.get(0).getiAgent_id());
+                if (!message_list.isEmpty()) {
+                    session.setAttribute("message", message_list);
+                    session.setAttribute("message_num", message_list.size());
+                }
             }
-            if (!Md5Util.getMD5(pass_word).equalsIgnoreCase(user.get(0).getPass_word())) {
-                JsonUtil.sendJson(response, Config.LOGIN_FALSE);
-            }
-            if("无效".equals(user.get(0).getStatus())){
-                JsonUtil.sendJson(response, Config.USER_FASLE);
-                return;
-            }
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user.get(0));
-            session.setAttribute("user_name",user_name);
-            session.setAttribute("login_type", user.get(0).getLogin_type());
-            String login_token =request.getRemoteAddr();
-            jedis.hset("login_token",user_name,login_token);
+            String login_token = request.getRemoteAddr();
+            /**
+             * 保存登陆地址
+             */
+            jedis.hset("login_token", user_name, login_token);
+
             JsonUtil.sendJson(response, Config.SUCCESS);
-        }catch (JedisConnectionException e){
+        } catch (JedisConnectionException e) {
             log.error("redis连接异常..");
-            JsonUtil.sendJson(response,Config.ERROR("redis连接异常.."));
+            JsonUtil.sendJson(response, Config.ERROR("redis连接异常.."));
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,35 +129,35 @@ public class LoginController {
      * @param response
      */
     @RequestMapping("/edit")
-    public ModelAndView user_edit(Model model,HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView user_edit(Model model, HttpServletRequest request, HttpServletResponse response) {
         try {
+            Map<String, String> map = new HashMap<String, String>();
             if ("del".equals(request.getParameter("sign"))) {
-                ps_userinfo_service.del_user(request.getParameter("user_name"));
-                Map<String,String> map=new HashMap<String, String>();
-                map.put("user_name",request.getParameter("user_name"));
+                ps_userinfo_service.del_user(request.getParameter("iAgent_id"));
                 return new ModelAndView("user_group");
             }
-            if("sel_one".equals(request.getParameter("sign"))){
-                List<User> users = ps_userinfo_service.select_user_byName(request.getParameter("user_name"));
-                User user=users.get(0);
-                model.addAttribute("user_info",user);
+            if ("sel_one".equals(request.getParameter("sign"))) {
+                map.put("iAgent_id", request.getParameter("iAgent_id"));
+                List<User> users = ps_userinfo_service.select_user_byName(map);
+                User user = users.get(0);
+                model.addAttribute("user_info", user);
                 return new ModelAndView("user_info");
             }
             if ("sel".equals(request.getParameter("sign"))) {
-                List<User> users = ps_userinfo_service.select_user_byName("");
-                    model.addAttribute("userinfo_list",users);
-                    return new ModelAndView("user_group");
+                List<User> users = ps_userinfo_service.select_user_byName(null);
+                model.addAttribute("userinfo_list", users);
+                return new ModelAndView("user_group");
             }
-            String user_name =request.getParameter("user_name");
+            String iAgent_name = request.getParameter("iAgent_name");
             String password = request.getParameter("pass_word");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             String logo = request.getParameter("logo");
             String login_type = request.getParameter("login_type");
-            String email=request.getParameter("email");
-            String status=request.getParameter("status");
+            String email = request.getParameter("email");
+            String status = request.getParameter("status");
             User user = new User();
-            user.setUser_name(user_name);
+            user.setiAgent_name(iAgent_name);
             user.setPhone(phone);
             user.setAddress(address);
             user.setPass_word(Md5Util.getMD5(password));
@@ -127,16 +169,18 @@ public class LoginController {
             }
             if ("new".equals(request.getParameter("sign"))) {
                 user.setCreate_time(DateUtil.getTimestamp(DateUtil.SIMPLE));
-              List<User> list=ps_userinfo_service.select_user_byName(user_name);
-                if(!list.isEmpty()){
-                    model.addAttribute("error",Config.USER_EXIST);
+                map.put("iAgent_name", request.getParameter("iAgent_name"));
+                List<User> list = ps_userinfo_service.select_user_byName(map);
+                if (!list.isEmpty()) {
+                    model.addAttribute("error", Config.USER_EXIST);
                     return new ModelAndView("../error");
                 }
-                user.setUser_name(user_name);
+                user.setiAgent_name(iAgent_name);
                 ps_userinfo_service.insert_user(user);
-               return new ModelAndView("user_group");
+                return new ModelAndView("user_group");
             }
             if ("edit".equals(request.getParameter("sign"))) {
+                user.setiAgent_id(request.getParameter("iAgent_id"));
                 user.setModify_time(DateUtil.getTimestamp(DateUtil.SIMPLE));
                 ps_userinfo_service.update_user_byName(user);
                 return new ModelAndView("user_group");
@@ -163,9 +207,9 @@ public class LoginController {
             jedis.hdel("login_token", UserUtil.getUser_name(request));
             request.getSession().invalidate();
             response.sendRedirect("/login.html");
-        }catch (JedisConnectionException e){
+        } catch (JedisConnectionException e) {
             log.error("redis连接异常..");
-            JsonUtil.sendJson(response,Config.ERROR("redis连接异常.."));
+            JsonUtil.sendJson(response, Config.ERROR("redis连接异常.."));
             return;
         } catch (IOException e) {
             e.printStackTrace();
@@ -175,74 +219,52 @@ public class LoginController {
     }
 
     /**
-     * 工作签到
-     *
-     * @param request
-     * @param response
+     * 站内信
      */
-    @RequestMapping("/work_sign")
-    public void work_sign(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/message_send")
+    public ModelAndView message_moudle(@RequestParam(value = "message") String message,
+                                       @RequestParam(value = "iAgent_id", required = false) String iAgent_id,
+                                       Model model) {
         try {
-            String date = DateUtil.getTimestamp(DateUtil.SIMPLE);
-            String morning_work = request.getParameter("morning_work");
-            String afternoon_work = request.getParameter("afternoon_work");
-            String work_end = request.getParameter("work_end");
-            String user_name = request.getParameter("user_name");
+            List<User> userList = ps_userinfo_service.select_user_byName(null);
             Map<String, String> map = new HashMap<String, String>();
-            //开始工作签到
-            if (work_end == null || work_end == "") {
-                map.put("work_start", date);
-                map.put("user_name", UserUtil.getUser_name(request));
-                ps_userinfo_service.insert_work_start(map);
-                JsonUtil.sendJson(response, Config.SUCCESS);
-                return;
-                //结束工作签到
-            } else {
-                int max_id = ps_userinfo_service.select_max_id(UserUtil.getUser_name(request));
-                map.put("morning_work", morning_work);
-                map.put("afternoon_work", afternoon_work);
-                map.put("work_end", date);
-                map.put("user_name", UserUtil.getUser_name(request));
-                map.put("id", String.valueOf(max_id));
-                ps_userinfo_service.update_work(map);
-                JsonUtil.sendJson(response, Config.SUCCESS);
+            for (User user : userList) {
+                map.clear();
+                map.put("iAgent_id", user.getiAgent_id());
+                map.put("message", message);
+                map.put("create_time", DateUtil.getTimestamp(DateUtil.SIMPLE));
+                ps_userinfo_service.insert_message(map);
             }
+            return new ModelAndView("index");
         } catch (Exception e) {
             e.printStackTrace();
-            JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
+            model.addAttribute("error", e.getMessage());
+            return new ModelAndView("../error");
         }
     }
 
     /**
-     * 获取签到信息
-     *
-     * @param request
-     * @param response
+     * 我的站内信页面
      */
-    @RequestMapping("/get_work_sign")
-    public void get_work_sign(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping("/my_message")
+    public ModelAndView my_message(Model model,HttpServletRequest request) {
         try {
-            String user_name = UserUtil.getUser_name(request);
-            List<Map<String, String>> list = ps_userinfo_service.select_work_sign_byUser(user_name);
-            if (!list.isEmpty()) {
-                JSONArray jsonArray = new JSONArray();
-                JSONObject jsonObject = new JSONObject();
-                for (Map<String, String> map : list) {
-                    jsonObject.put("user_name", map.get("user_name"));
-                    jsonObject.put("work_start", map.get("work_start"));
-                    jsonObject.put("work_end", StringUtil.defaultString(map.get("work_end"), "暂无"));
-                    jsonObject.put("morning_work", StringUtil.defaultString(map.get("morning_work"), "暂无"));
-                    jsonObject.put("afternoon_work", StringUtil.defaultString(map.get("afternoon_work"), "暂无"));
-                    jsonArray.add(jsonObject);
-                }
-                JsonUtil.sendJson(response, Config.DATA_RETURN(jsonArray));
-                return;
-            }
-            JsonUtil.sendJson(response, Config.DATA_RETURN(JSONArray.fromObject("[]")));
-            return;
+            List<Map<String, String>> list=ps_userinfo_service.select_message(UserUtil.getLogin_iAgent_id(request));
+            model.addAttribute("message_list",list);
+            return new ModelAndView("my_message");
+        } catch (JedisConnectionException e) {
+            e.printStackTrace();
+            model.addAttribute("error", e.getMessage());
+            return new ModelAndView("../error");
         } catch (Exception e) {
             e.printStackTrace();
-            JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
+            model.addAttribute("error", e.getMessage());
+            return new ModelAndView("../error");
         }
+    }
+    @RequestMapping("/del_message")
+    public void del_message(HttpServletRequest request,HttpServletResponse response){
+        ps_userinfo_service.del_message(request.getParameter("id"));
+        JsonUtil.sendJson(response,"{\"code\":\"1000\"}");
     }
 }

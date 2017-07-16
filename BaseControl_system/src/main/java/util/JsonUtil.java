@@ -11,7 +11,6 @@ public class JsonUtil {
     public static void sendJson(HttpServletResponse response,String message){
         PrintWriter printWriter=null;
         try {
-            response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=utf-8");
             printWriter=response.getWriter();
             printWriter.println(message);

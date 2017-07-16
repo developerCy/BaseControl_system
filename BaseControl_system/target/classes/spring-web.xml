@@ -25,8 +25,8 @@
 	<mcv:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/user/**"/>
-            <mvc:mapping path="/schedule/**"/>
             <mvc:mapping path="/page/**"/>
+            <mvc:mapping path="/etps/**"/>
             <bean class="common.Interceptor"></bean>
         </mvc:interceptor>
     </mcv:interceptors>

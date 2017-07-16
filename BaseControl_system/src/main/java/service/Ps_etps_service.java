@@ -11,6 +11,9 @@ import java.util.Map;
 public interface Ps_etps_service {
     List<EtpsInfo> select_etpsinfo(Map<String,String> map);
     void insert_etpsinfo(EtpsInfo etpsInfo);
-    void update_etpsinfo(Map<String,String> map);
+    void update_etpsinfo(EtpsInfo etpsInfo);
     void del_etpsinfo(Map<String,String> map);
+    String  select_checked_all(String check_status);
+    String  select_count_all();
+    String  select_use_all();
 }

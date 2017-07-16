@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.Ps_orderInfo_mapper">
+    <select id="select_etps_order_info" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT * FROM order_info WHERE
+        <if test="iAgent_id !=null">
+            iAgent_id=#{iAgent_id}
+        </if>
+    </select>
+    <select id="select_etps_order_count_pay_success" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info WHERE pay_status='1'
+        <if test="iAgent_id !=null">
+            iAgent_id=#{iAgent_id}
+        </if>
+    </select>
+    <select id="select_etps_order_count_refund" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info WHERE pay_status='2'
+        <if test="iAgent_id !=null">
+            iAgent_id=#{iAgent_id}
+        </if>
+    </select>
+</mapper>

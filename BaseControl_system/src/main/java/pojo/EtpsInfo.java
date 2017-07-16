@@ -9,6 +9,8 @@ public class EtpsInfo implements Serializable{
     /**
      * 基本信息
      */
+    private String iEtps_id;
+    private String iAgent_id;
     private String contact_name;
     private String contact_address;
     private String contact_phone;
@@ -16,15 +18,94 @@ public class EtpsInfo implements Serializable{
     private String etps_name;
     private String etps_login_name;
     private String etps_login_password;
-    private String user_name;//归属
+    private String iAgent_name;//归属
     private String status;
     private String create_time;
     private String modify_time;
+    private String alipay_rate;
     /**
      * 签约信息
      */
     private String alipay_token;
-    private String sign_channel;
+    private String alipay_account;
+    private String alipay_account_name;
+    private String alipay_appid;
+    private String alipay_pid;
+    private String check_status;
+    private String check_desc;
+
+    public String getCheck_desc() {
+        return check_desc;
+    }
+
+    public void setCheck_desc(String check_desc) {
+        this.check_desc = check_desc;
+    }
+
+    public String getiEtps_id() {
+        return iEtps_id;
+    }
+
+    public void setiEtps_id(String iEtps_id) {
+        this.iEtps_id = iEtps_id;
+    }
+
+    public String getiAgent_id() {
+        return iAgent_id;
+    }
+
+    public void setiAgent_id(String iAgent_id) {
+        this.iAgent_id = iAgent_id;
+    }
+
+    public String getCheck_status() {
+        return check_status;
+    }
+
+    public void setCheck_status(String check_status) {
+        this.check_status = check_status;
+    }
+
+    public String getAlipay_rate() {
+        return alipay_rate;
+    }
+
+    public void setAlipay_rate(String alipay_rate) {
+        this.alipay_rate = alipay_rate;
+    }
+
+    public String getAlipay_account() {
+        return alipay_account;
+    }
+
+    public void setAlipay_account(String alipay_account) {
+        this.alipay_account = alipay_account;
+    }
+
+
+    public String getAlipay_account_name() {
+        return alipay_account_name;
+    }
+
+    public void setAlipay_account_name(String alipay_account_name) {
+        this.alipay_account_name = alipay_account_name;
+    }
+
+    public String getAlipay_appid() {
+        return alipay_appid;
+    }
+
+    public void setAlipay_appid(String alipay_appid) {
+        this.alipay_appid = alipay_appid;
+    }
+
+    public String getAlipay_pid() {
+        return alipay_pid;
+    }
+
+    public void setAlipay_pid(String alipay_pid) {
+        this.alipay_pid = alipay_pid;
+    }
 
     public String getContact_mail() {
         return contact_mail;
@@ -99,12 +180,12 @@ public class EtpsInfo implements Serializable{
         this.etps_login_password = etps_login_password;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getiAgent_name() {
+        return iAgent_name;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setiAgent_name(String iAgent_name) {
+        this.iAgent_name = iAgent_name;
     }
 
     public String getStatus() {
@@ -123,12 +204,4 @@ public class EtpsInfo implements Serializable{
         this.alipay_token = alipay_token;
     }
 
-
-    public String getSign_channel() {
-        return sign_channel;
-    }
-
-    public void setSign_channel(String sign_channel) {
-        this.sign_channel = sign_channel;
-    }
 }
