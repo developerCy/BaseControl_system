@@ -3,15 +3,44 @@
 <mapper namespace="dao.Ps_user_mapper" >
     <select id="select_user_byName" parameterType="java.util.HashMap" resultType="pojo.User">
         SELECT * FROM user
-        <if test="iAgent_id !=null and iAgent_id !=''">
-        WHERE iAgent_id=#{iAgent_id}
-        </if>
-        <if test="iAgent_name !=null and iAgent_name !=''">
-            WHERE iAgent_name=#{iAgent_name}
-        </if>
+        <where>
+            <if test="iAgent_id !=null and iAgent_id !=''">
+                 iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iAgent_name !=null and iAgent_name !=''">
+                 iAgent_name=#{iAgent_name}
+            </if>
+        </where>
     </select>
     <update id="update_user_byName" parameterType="pojo.User">
-        UPDATE user SET phone=#{phone},address=#{address},login_type=#{login_type},logo=#{logo},pass_word=#{pass_word},email=#{email},status=#{status},modify_time=#{modify_time} WHERE iAgent_id=#{iAgent_id}
+        UPDATE user
+        <set>
+            <if test="phone !=null">
+                phone=#{phone},
+            </if>
+            <if test="address !=null">
+                address=#{address},
+            </if>
+            <if test="login_type !=null">
+                login_type=#{login_type},
+            </if>
+            <if test="logo !=null">
+                logo=#{logo},
+            </if>
+            <if test="pass_word !=null">
+                pass_word=#{pass_word},
+            </if>
+            <if test="email !=null">
+                email=#{email},
+            </if>
+            <if test="status !=null">
+                status=#{status},
+            </if>
+            <if test="modify_time !=null">
+                modify_time=#{modify_time}
+            </if>
+        </set>
+        WHERE iAgent_id=#{iAgent_id}
     </update>
     <insert id="insert_user" parameterType="pojo.User">
         INSERT INTO user (iAgent_name,pass_word,login_type,logo,phone,address,email,status,create_time) VALUES (#{iAgent_name},#{pass_word},#{login_type},#{logo},#{phone},#{address},#{email},#{status},#{create_time})

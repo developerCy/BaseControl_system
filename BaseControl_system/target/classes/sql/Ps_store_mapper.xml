@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="dao.Ps_store_mapper">
-    <select id="select_etps_order_info" parameterType="pojo.Store_info" resultType="pojo.Store_info">
+    <select id="select_store" parameterType="pojo.Store_info" resultType="pojo.Store_info">
         SELECT * FROM store_info
-        <if test="iAgent_id !=null">
-            WHERE   iAgent_id=#{iAgent_id}
-        </if>
-        <if test="iEtps_id !=null">
-            WHERE  iEtps_id=#{iEtps_id}
-        </if>
+        <where>
+            <if test="iAgent_id !=null">
+                 iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id !=null">
+                 iEtps_id=#{iEtps_id}
+            </if>
+            <if test="store_id !=null">
+                store_id=#{store_id}
+            </if>
+        </where>
     </select>
-    <update id="update_etps_order_info" parameterType="pojo.Store_info">
-       UPDATE SET store_info
-        <if test="store_name !=null">
-            store_name=#{store_name},
-        </if>
-        <if test="store_address !=null">
-,
-        </if>
-        <if test="store_id">
-            store_id=#{store_id},
-        </if>
-        <if test="alipay_shop_id !=null">
-            alipay_shop_id=#{alipay_shop_id},
-        </if>
-        <if test="shop_owner_name !=null">
-            shop_owner_name=#{shop_owner_name},
-        </if>
-        <if test="business_area !=null">
-            business_area=#{business_area}
-        </if>
-        WHERE
-        <if test="iAgent_id !=null">
-            iAgent_id=#{iAgent_id}
-        </if>
-        <if test="iEtps_id !=null">
-            iEtps_id=#{iEtps_id}
-        </if>
-    </update>
     <insert id="insert_store" parameterType="pojo.Store_info">
-        INSERT INTO (iAgent_id,iAgent_name,iEtps_id,etps_name,store_name,store_address,store_id,alipay_shop_id,shop_owner_name,business_area)
-        VALUES (#{iAgent_id},#{iAgent_name},#{iEtps_id},#{etps_name},#{store_name},#{store_address},#{store_id},#{alipay_shop_id},#{shop_owner_name},#{business_area})
+        INSERT INTO store_info
+        (iAgent_id,iEtps_id,etps_name,store_name,store_address,store_id,alipay_shop_id,shop_owner_name,business_area)
+        VALUES
+        (#{iAgent_id},#{iEtps_id},#{etps_name},#{store_name},#{store_address},#{store_id},#{alipay_shop_id},#{shop_owner_name},#{business_area})
     </insert>
+    <update id="update_store" parameterType="pojo.Store_info">
+        UPDATE store_info
+        <set>
+            <if test="store_name !=null">
+                store_name=#{store_name},
+            </if>
+            <if test="store_address !=null">
+                store_address=#{store_address},
+            </if>
+            <if test="alipay_shop_id !=null">
+                alipay_shop_id=#{alipay_shop_id},
+            </if>
+            <if test="business_area !=null">
+                business_area=#{business_area},
+            </if>
+            <if test="shop_owner_name !=null">
+                shop_owner_name=#{shop_owner_name},
+            </if>
+        </set>
+        WHERE store_id=#{store_id}
+    </update>
     <delete id="del_store" parameterType="pojo.Store_info">
         DELETE FROM store_info
-        <if test="iAgent_id !=null">
-           WHERE iAgent_id=#{iAgent_id}
-        </if>
-        <if test="iEtps_id">
-            WHERE iEtps_id=#{iEtps_id}
-        </if>
-        <if test="store_id !=null">
-            WHERE store_id=#{store_id}
-        </if>
+        <where>
+            <if test="iAgent_id !=null">
+                 iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id">
+                 iEtps_id=#{iEtps_id}
+            </if>
+            <if test="store_id !=null">
+                store_id=#{store_id}
+            </if>
+        </where>
     </delete>
-    <select id="select_count" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="select_count" parameterType="pojo.Store_info" resultType="java.lang.String">
         SELECT COUNT(*) FROM store_info
-        <if test="_parameter !=null">
-           WHERE iAgent_id=#{iAgent_id}
-        </if>
-    </select>
-    <select id="select_count_koubei" resultType="java.lang.String">
-        SELECT COUNT(*) FROM store_info WHERE alipay_shop_id is NOT NULL
+        <where>
+            <if test="iAgent_id !=null">
+                iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id !=null">
+                iEtps_id=#{iEtps_id}
+            </if>
+        </where>
     </select>
 </mapper>

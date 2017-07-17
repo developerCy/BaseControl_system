@@ -68,12 +68,18 @@
             <div class="user-options dropdown-box">
                 <div class="drop-content basic">
                     <ul>
+<<<<<<< HEAD
                         <c:if test="${sessionScope.login_type eq '管理员'}">
                             <li><a href="<%=path%>/user/edit?sign=sel_one&iAgent_id=<%=UserUtil.getUser_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
                         </c:if>
                         <c:if test="${sessionScope.login_type eq '渠道商'}">
                             <li><a href="<%=path%>/etps/edit?sign=sel_one&iEtps_id=<%=UserUtil.getUser_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
                         </c:if>
+=======
+                        <c:if test="${sessionScope.login_type !='商户'}">
+                            <li><a href="<%=path%>/user/edit?sign=sel_one&iAgent_id=<%=UserUtil.getUser_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
+                        </c:if>
+>>>>>>> 71d4289de9311a47110cb27419c4a633d3511e7d
                     </ul>
                 </div>
             </div>

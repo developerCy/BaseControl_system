@@ -27,38 +27,33 @@
                     <form>
                         <div class="form-group mt-md">
                             <span class="input-with-icon">
-                                <select  style="text-align:center" class="form-control" id="login_type" name="login_type" >
-                                    <option value="管理员|渠道商" checked>管理员|渠道商</option>
-                                    <option value="商户">商户</option>
-                                </select>
-                            <i class="fa fa-shield"></i>
-                            </span>
-                        </div>
-                        <div class="form-group mt-md">
-                            <span class="input-with-icon">
-                                    <input type="text" class="form-control" id="user_name" name="user_name"  placeholder="Account">
+                                    <input type="text" class="form-control" id="auth_code" name="auth_code"  placeholder="支付宝付款码">
                                     <i class="fa fa-user"></i>
                             </span>
                         </div>
                         <div class="form-group">
                                 <span class="input-with-icon">
-                                        <input type="password" class="form-control" id="pass_word" name="pass_word" placeholder="Password">
+                                        <input type="number" class="form-control" step="0.01" min="0.01" max="9999999" id="total_amount" name="total_amount" placeholder="付款金额">
                                         <i class="fa fa-key"></i>
                                     </span>
                         </div>
                         <div class="form-group">
-                            <!--
-                            <div class="checkbox-primary">
-                                <input type="checkbox" id="remember-me" value="option1" checked>
-                                <label for="remember-me">记住我</label>
-                            </div>
-                            -->
+                                <span class="input-with-icon">
+                                        <input type="number" readonly class="form-control" id="store_id" name="store_id" value="3" placeholder="store_id">
+                                        <i class="fa fa-key"></i>
+                                    </span>
                         </div>
                         <div class="form-group">
-                            <a href="javascript:login($('#user_name').val(),$('#pass_word').val(),$('#login_type').val());" class="btn btn-primary btn-block">登陆</a>
+                            <a href="javascript:login($('#auth_code').val(),$('#total_amount').val(),$('#store_id').val());" class="btn btn-primary btn-block">支付demo</a>
                         </div>
-                        <div class="form-group text-center">
-                            <a href="forgot-password.html">忘记了密码？</a>
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                    <input type="text" class="form-control" id="out_trade_no" name="out_trade_no"  placeholder="商户订单号">
+                                    <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <a href="javascript:refund_pay($('#out_trade_no').val());" class="btn btn-primary btn-block">退款demo</a>
                         </div>
                     </form>
                 </div>
@@ -76,28 +71,58 @@
 <script src="scripts/main_scripts/javascripts/template-script.min.js"></script>
 <script src="scripts/main_scripts/javascripts/template-init.min.js"></script>
 <script type="text/javascript">
-    function login(user_name,pass_word,login_type) {
-        if(user_name=="" || pass_word =="" ||login_type==""){
+    function login(auth_code,total_amount,store_id) {
+        if(auth_code=="" || total_amount =="" ||store_id==""){
             iziToast.warning({
-                message:'用户名密码不能为空！',
+                message:'无效参数！',
                 timeout:'3000',
                 position:'topRight'
             });
             return;
         }
         $.ajax({
-            url:"/user/login",
+            url:"/pay/trade_pay",
             dataType:"json",
             type:"post",
-            data:{"user_name":user_name,"pass_word":pass_word,"login_type":login_type},
+            data:{"auth_code":auth_code,"total_amount":total_amount,"store_id":store_id,"out_trade_no":parseInt(Math.random()*900000000000+100000000000)},
             success:function (result) {
-                if(result.code=="1"){
+                if(result.code=="10000"){
                     iziToast.success({
-                        message:'登陆成功！',
+                        message:'付款成功！',
                         position:'topRight',
                         timeout:'3000'
                     });
-                    window.location.href="page/index.jsp";
+                }else{
+                    iziToast.error({
+                        message:result.desc,
+                        position:'topRight',
+                        timeout:'3000'
+                    });
+                }
+            }
+        });
+    }
+    function refund_pay(out_trade_no) {
+        if(out_trade_no==""){
+            iziToast.warning({
+                message:'无效参数！',
+                timeout:'3000',
+                position:'topRight'
+            });
+            return;
+        }
+        $.ajax({
+            url:"/pay/refund",
+            dataType:"json",
+            type:"post",
+            data:{"out_trade_no":out_trade_no},
+            success:function (result) {
+                if(result.code=="10000"){
+                    iziToast.success({
+                        message:'退款成功!',
+                        position:'topRight',
+                        timeout:'3000'
+                    });
                 }else{
                     iziToast.error({
                         message:result.desc,
@@ -111,7 +136,7 @@
     //回车提交事件
     $("body").keydown(function(event) {
         if (event.keyCode == "13") {//keyCode=13是回车键
-            login($('#user_name').val(), $('#pass_word').val(),$('#login_type').val());
+            login($('#auth_code').val(), $('#total_amount').val(),$('#store_id').val());
         }
     });
 </script>

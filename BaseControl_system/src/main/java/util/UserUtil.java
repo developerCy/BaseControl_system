@@ -10,31 +10,33 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UserUtil {
     public static String getUser_name(HttpServletRequest request) {
-        Object object = request.getSession().getAttribute("user");
-        if (object instanceof EtpsInfo) {
-            return ((EtpsInfo) object).getEtps_login_name();
-        } else if (object instanceof User) {
-            return ((User) object).getiAgent_name();
+        Object object =request.getSession().getAttribute("user");
+        if(object instanceof EtpsInfo){
+            return ((EtpsInfo)object).getEtps_name();
+        }
+        if(object instanceof User){
+            return ((User)object).getiAgent_name();
         }
         return null;
     }
 
     public static String getLogin_type(HttpServletRequest request) {
-        Object object = request.getSession().getAttribute("user");
-        if (object instanceof EtpsInfo) {
+        Object object =request.getSession().getAttribute("user");
+        if(object instanceof EtpsInfo){
             return "商户";
-        } else if (object instanceof User) {
-            return ((User) object).getLogin_type();
+        }
+        if(object instanceof User){
+            return ((User)object).getLogin_type();
         }
         return null;
     }
-
     public static String getUser_id(HttpServletRequest request) {
-        Object object = request.getSession().getAttribute("user");
-        if (object instanceof EtpsInfo) {
-            return ((EtpsInfo) object).getiEtps_id();
-        } else if (object instanceof User) {
-            return ((User) object).getiAgent_id();
+        Object object =request.getSession().getAttribute("user");
+        if(object instanceof EtpsInfo){
+            return ((EtpsInfo)object).getiEtps_id();
+        }
+        if(object instanceof User){
+            return ((User)object).getiAgent_id();
         }
         return null;
     }

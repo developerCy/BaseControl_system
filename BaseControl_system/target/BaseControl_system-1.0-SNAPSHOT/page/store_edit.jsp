@@ -1,5 +1,6 @@
 <%@ page import="util.DateUtil" %>
 <%@ page import="common.Config" %>
+<%@ page import="util.UserUtil" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
@@ -19,9 +20,11 @@
         <jsp:include page="../index_side.jsp"/>
         <div class="content">
             <div class="row animated fadeInLeft">
-                <form  class="form-horizontal form-stripe" action="/store/store_info_edit?sign=new"
+                <form  class="form-horizontal form-stripe" action="/store/store_info_edit"
                       method="post">
-                    <input type="hidden" value="${etps_info.iEtps_id}" name="iEtps_id">
+                    <input type="hidden" value="<%=UserUtil.getUser_id(request)%>" name="iEtps_id">
+                    <input type="hidden" value="${store_id}" name="store_id">
+                    <input type="hidden" value="${update}" name="sign">
                 <div class="col-md-12">
                     <h4 class="section-subtitle"><b>门店信息</b> 录入</h4>
                     <div class="panel">
@@ -69,7 +72,7 @@
                                             <label for="alipay_shop_id" class="col-sm-2 control-label">口碑门店ID：</label>
                                             <div class="col-sm-10">
                                                 <input class="form-control" value="${store_info.alipay_shop_id}"
-                                                       id="alipay_shop_id" name="alipay_shop_id" required
+                                                       id="alipay_shop_id" name="alipay_shop_id"
                                                        placeholder="口碑门店需要填此参数" type="text">
                                             </div>
                                         </div>

@@ -1,5 +1,6 @@
 package controller;
 
+import common.Config;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -257,6 +258,26 @@ public class EtpsInfoController {
             ExcelUtil.out_Etps_info_list_to_Excel(list,response);
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 重置商户密码
+     * @param iEtps_id
+     * @param response
+     */
+    @RequestMapping("/reset_pwd")
+    public void reset_pwd(@RequestParam(value = "iEtps_id")String iEtps_id,HttpServletResponse response){
+        try{
+            String pwd=String.valueOf((int)(Math.random()*900000+100000));
+            EtpsInfo etpsInfo=new EtpsInfo();
+            etpsInfo.setEtps_login_password(Md5Util.getMD5(pwd));
+            etpsInfo.setiEtps_id(iEtps_id.trim());
+            ps_etps_service.update_etpsinfo(etpsInfo);
+            JsonUtil.sendJson(response,Config.SUCCESS(pwd));
+        }catch (Exception e){
+            e.printStackTrace();
+            JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
         }
     }
 }

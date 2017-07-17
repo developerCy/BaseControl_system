@@ -42,6 +42,7 @@
 	<mvc:resources mapping="/index_side.jsp" location="/index_side.jsp"/>
 	<mvc:resources mapping="/error.jsp" location="/error.jsp"/>
 	<mvc:resources mapping="/forgot-password.html" location="/forgot-password"/>
+	<mvc:resources mapping="/pay_test.html" location="/pay_test.html"/>
 </beans>
 
 
