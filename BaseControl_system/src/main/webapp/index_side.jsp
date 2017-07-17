@@ -40,6 +40,7 @@
                             </ul>
                         </li>
                     </c:if>
+                    <c:if test="${sessionScope.login_type !='商户'}">
                         <li class="has-child-item close-item">
                             <a><i class="fa fa-steam" aria-hidden="true"></i><span>入网信息审核</span></a>
                             <ul class="nav child-nav level-1">
@@ -51,11 +52,12 @@
                                 </c:if>
                             </ul>
                         </li>
+                    </c:if>
                     <li class="has-child-item close-item">
                         <a><i class="fa fa-table" aria-hidden="true"></i><span>交易管理</span></a>
                         <ul class="nav child-nav level-1">
-                                <li><a href="<%=path%>/etps/etpsinfo_list">商户交易明细</a></li>
-                                <li><a href="<%=path%>/etps/etpsinfo_list?sign=check">商户交易汇总</a></li>
+                                <li><a href="<%=path%>/orderInfo/select_all_etps_order_info">商户交易明细</a></li>
+                                <li><a href="<%=path%>/orderInfo/select_all_etps_order_info">商户交易汇总</a></li>
                         </ul>
                     </li>
                     <li class="has-child-item close-item">

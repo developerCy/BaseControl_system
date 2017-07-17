@@ -10,21 +10,34 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class UserUtil {
     public static String getUser_name(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        return user.getiAgent_name();
+        Object object =request.getSession().getAttribute("user");
+        if(object instanceof EtpsInfo){
+            return ((EtpsInfo)object).getEtps_name();
+        }
+        if(object instanceof User){
+            return ((User)object).getiAgent_name();
+        }
+        return null;
     }
     public static String getLogin_type(HttpServletRequest request) {
         Object object =request.getSession().getAttribute("user");
-        if(object instanceof EtpsInfo)
-        return user.getLogin_type();
+        if(object instanceof EtpsInfo){
+            return "商户";
+        }
+        if(object instanceof User){
+            return ((User)object).getLogin_type();
+        }
+        return null;
     }
-    public static String getLogin_iAgent_id(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        return user.getiAgent_id();
-    }
-    public static String getLogin_iAgent_name(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        return user.getiAgent_name();
+    public static String getUser_id(HttpServletRequest request) {
+        Object object =request.getSession().getAttribute("user");
+        if(object instanceof EtpsInfo){
+            return ((EtpsInfo)object).getiEtps_id();
+        }
+        if(object instanceof User){
+            return ((User)object).getiAgent_id();
+        }
+        return null;
     }
     public static String getPhone(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
@@ -37,19 +50,5 @@ public class UserUtil {
     public static String getEmail(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         return user.getEmail();
-    }
-
-    /**
-     * 商户类角色工具
-     * @param request
-     * @return
-     */
-    public static String getEtps_id(HttpServletRequest request) {
-        EtpsInfo etpsInfo = (EtpsInfo) request.getSession().getAttribute("user");
-        return etpsInfo.getiEtps_id();
-    }
-    public static String getEtps_name(HttpServletRequest request) {
-        EtpsInfo etpsInfo = (EtpsInfo) request.getSession().getAttribute("user");
-        return etpsInfo.getEtps_name();
     }
 }

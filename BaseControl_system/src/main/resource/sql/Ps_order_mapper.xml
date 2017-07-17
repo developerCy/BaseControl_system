@@ -1,22 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="dao.Ps_orderInfo_mapper">
-    <select id="select_etps_order_info" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT * FROM order_info WHERE
-        <if test="iAgent_id !=null">
-            iAgent_id=#{iAgent_id}
-        </if>
+    <select id="select_etps_order_info" parameterType="pojo.Order_info" resultType="pojo.Order_info">
+        SELECT * FROM order_info
+        <where>
+            <if test="iAgent_id !=null">
+                AND  iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id !=null">
+                AND  iEtps_id=#{iEtps_id}
+            </if>
+            <if test="out_trade_no !=null">
+                AND out_trade_no=#{out_trade_no}
+            </if>
+        </where>
     </select>
-    <select id="select_etps_order_count_pay_success" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info WHERE pay_status='1'
-        <if test="iAgent_id !=null">
-            iAgent_id=#{iAgent_id}
-        </if>
+    <select id="select_etps_order_count_pay_success" parameterType="pojo.Order_info" resultType="java.util.HashMap">
+        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info
+        <where>
+            pay_status='1'
+            <if test="iAgent_id !=null">
+              AND  iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id !=null">
+              AND  iEtps_id=#{iEtps_id}
+            </if>
+            <if test="out_trade_no !=null">
+                AND out_trade_no=#{out_trade_no}
+            </if>
+        </where>
+
     </select>
-    <select id="select_etps_order_count_refund" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info WHERE pay_status='2'
-        <if test="iAgent_id !=null">
-            iAgent_id=#{iAgent_id}
-        </if>
+    <select id="select_etps_order_count_refund" parameterType="pojo.Order_info" resultType="java.util.HashMap">
+        SELECT count(*) as total_num,round(sum(total_amount),2) as total_amount FROM order_info
+        <where>
+            pay_status='2'
+            <if test="iAgent_id !=null">
+              AND  iAgent_id=#{iAgent_id}
+            </if>
+            <if test="iEtps_id !=null">
+                AND  iEtps_id=#{iEtps_id}
+            </if>
+        </where>
     </select>
+    <insert id="insert_order" parameterType="pojo.Order_info">
+        INSERT INTO order_info
+        (iAgent_id,iAgent_name,iEtps_id,etps_name,store_id,store_name,total_amount,channel,pay_status,out_trade_no,trade_no,receipt_amount,buyer_pay_amount,point_amount,invoice_amount,gmt_amount,order_date,pay_date)
+        VALUES
+       (#{iAgent_id},#{iAgent_name},#{iEtps_id},#{etps_name},#{store_id},#{store_name},#{total_amount},#{channel},#{pay_status},#{out_trade_no},#{trade_no},#{receipt_amount},#{buyer_pay_amount},#{point_amount},#{invoice_amount},#{gmt_amount},#{order_date},#{pay_date})
+    </insert>
+    <update id="update_pay_status" parameterType="pojo.Order_info">
+        UPDATE  order_info
+        <set>
+            <if test="pay_status !=null">
+                pay_status=#{pay_status},
+            </if>
+            <if test="trade_no !=null">
+                trade_no=#{trade_no},
+            </if>
+            <if test="receipt_amount !=null">
+                receipt_amount=#{receipt_amount},
+            </if>
+            <if test="buyer_pay_amount !=null">
+            buyer_pay_amount=#{buyer_pay_amount},
+        </if>
+            <if test="point_amount !=null">
+                point_amount=#{point_amount},
+            </if>
+            <if test="invoice_amount !=null">
+                invoice_amount=#{invoice_amount},
+            </if>
+            <if test="gmt_amount !=null">
+                gmt_amount=#{gmt_amount},
+            </if>
+            <if test="pay_date !=null">
+                pay_date=#{pay_date},
+            </if>
+        </set>
+        <where>
+            out_trade_no=#{out_trade_no}
+        </where>
+    </update>
 </mapper>

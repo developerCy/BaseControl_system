@@ -12,7 +12,6 @@
     <title> - 运维提醒</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <link rel="shortcut icon" href="favicon.ico">
     <link href="<%=path%>/scripts/500/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="<%=path%>/scripts/500/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="<%=path%>/scripts/500/animate.css" rel="stylesheet">

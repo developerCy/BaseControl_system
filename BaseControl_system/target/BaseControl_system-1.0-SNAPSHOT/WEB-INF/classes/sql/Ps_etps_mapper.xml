@@ -3,73 +3,77 @@
 <mapper namespace="dao.Ps_etps_mapper">
     <select id="select_etpsinfo" parameterType="java.util.HashMap" resultType="pojo.EtpsInfo">
         SELECT * FROM etps_info
-        <if test="iEtps_id !=null">
-            WHERE iEtps_id=#{iEtps_id}
-        </if>
-        <if test="iAgent_id !=null">
-            WHERE iAgent_id=#{iAgent_id}
-        </if>
-        <if test="etps_name !=null">
-            WHERE etps_name=#{etps_name}
-        </if>
+        <where>
+            <if test="iEtps_id !=null">
+                 iEtps_id=#{iEtps_id}
+            </if>
+            <if test="iAgent_id !=null">
+                 iAgent_id=#{iAgent_id}
+            </if>
+            <if test="etps_name !=null">
+                 etps_name=#{etps_name}
+            </if>
+        </where>
     </select>
     <update id="update_etpsinfo" parameterType="pojo.EtpsInfo">
-        UPDATE etps_info SET
-        <if test="contact_name !=null">
-            contact_name=#{contact_name},
-        </if>
-        <if test="contact_mail !=null">
-            contact_mail=#{contact_mail},
-        </if>
-        <if test="contact_address !=null">
-            contact_address=#{contact_address},
-        </if>
-        <if test="contact_phone !=null">
-            contact_phone=#{contact_phone},
-        </if>
-        <if test="etps_name !=null">
-            etps_name=#{etps_name},
-        </if>
-        <if test="etps_login_name !=null">
-            etps_login_name=#{etps_login_name},
-        </if>
-        <if test="etps_login_password !=null">
-            etps_login_password=#{etps_login_password},
-        </if>
-        <if test="iAgent_name !=null">
-            iAgent_name=#{iAgent_name},
-        </if>
-        <if test="status !=null">
-            status=#{status},
-        </if>
-        <if test="modify_time !=null">
-            modify_time=#{modify_time},
-        </if>
-        <if test="alipay_appid !=null">
-            alipay_appid=#{alipay_appid},
-        </if>
-        <if test="alipay_pid !=null">
-            alipay_pid=#{alipay_pid},
-        </if>
-        <if test="alipay_token !=null">
-            alipay_pid=#{alipay_pid},
-        </if>
-        <if test="alipay_account !=null">
-            alipay_account=#{alipay_account},
-        </if>
-        <if test="alipay_account_name !=null">
-            alipay_account_name=#{alipay_account_name},
-        </if>
-        <if test="alipay_rate !=null">
-            alipay_rate=#{alipay_rate},
-        </if>
-        <if test="check_status !=null">
-            check_status=#{check_status},
-        </if>
-        <if test="check_desc !=null">
-            check_desc=#{check_desc}
-        </if>
-        WHERE iEtps_id=#{iEtps_id}
+        UPDATE etps_info
+        <set>
+            <if test="contact_name !=null">
+                contact_name=#{contact_name},
+            </if>
+            <if test="contact_mail !=null">
+                contact_mail=#{contact_mail},
+            </if>
+            <if test="contact_address !=null">
+                contact_address=#{contact_address},
+            </if>
+            <if test="contact_phone !=null">
+                contact_phone=#{contact_phone},
+            </if>
+            <if test="etps_name !=null">
+                etps_name=#{etps_name},
+            </if>
+            <if test="etps_login_name !=null">
+                etps_login_name=#{etps_login_name},
+            </if>
+            <if test="etps_login_password !=null">
+                etps_login_password=#{etps_login_password},
+            </if>
+            <if test="iAgent_name !=null">
+                iAgent_name=#{iAgent_name},
+            </if>
+            <if test="status !=null">
+                status=#{status},
+            </if>
+            <if test="modify_time !=null">
+                modify_time=#{modify_time},
+            </if>
+            <if test="alipay_appid !=null">
+                alipay_appid=#{alipay_appid},
+            </if>
+            <if test="alipay_pid !=null">
+                alipay_pid=#{alipay_pid},
+            </if>
+            <if test="alipay_token !=null">
+                alipay_pid=#{alipay_pid},
+            </if>
+            <if test="alipay_account !=null">
+                alipay_account=#{alipay_account},
+            </if>
+            <if test="alipay_account_name !=null">
+                alipay_account_name=#{alipay_account_name},
+            </if>
+            <if test="alipay_rate !=null">
+                alipay_rate=#{alipay_rate},
+            </if>
+            <if test="check_status !=null">
+                check_status=#{check_status},
+            </if>
+            <if test="check_desc !=null">
+                check_desc=#{check_desc},
+            </if>
+        </set>
+        WHERE iEtps_id=#{iEtps_id,jdbcType=INTEGER}
     </update>
     <insert id="insert_etpsinfo" parameterType="pojo.EtpsInfo">
         INSERT INTO etps_info (iAgent_id,iAgent_name,contact_name,contact_phone,contact_address,contact_mail,etps_name,etps_login_name,etps_login_password,
@@ -80,13 +84,16 @@
         #{alipay_account_name},#{alipay_rate},#{check_status})
     </insert>
     <delete id="del_etpsinfo" parameterType="java.util.HashMap">
-        DELETE FROM etps_info WHERE
-        <if test="iAgent_name !=null">
-            iAgent_name=#{iAgent_name}
-        </if>
-        <if test="iEtps_id !=null">
-            iEtps_id=#{iEtps_id,jdbcType=VARCHAR}
-        </if>
+        DELETE FROM etps_info
+        <where>
+            <if test="iAgent_name !=null">
+                iAgent_name=#{iAgent_name}
+            </if>
+            <if test="iEtps_id !=null">
+                iEtps_id=#{iEtps_id,jdbcType=INTEGER}
+            </if>
+        </where>
+
     </delete>
     <select id="select_checked_all" parameterType="java.lang.String" resultType="java.lang.String">
        SELECT count(*) as total,check_status FROM etps_info WHERE check_status=#{check_status}

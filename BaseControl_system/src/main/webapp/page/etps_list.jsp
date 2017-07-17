@@ -83,6 +83,11 @@
                                                                                     data-placement="top" and title="编辑"
                                                                                     onclick="window.location.href='/etps/getEtps_info?sign=update&iEtps_id=${etps_info.iEtps_id}'">
                                                                                 <i class="fa fa-pencil"></i></button>
+                                                                            <button class="btn btn-transparent"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top" and title="重置密码"
+                                                                                    onclick="reset_pwd(${etps_info.iEtps_id});">
+                                                                                <i class="fa fa-key"></i></button>
                                                                         </c:if>
                                                                         <c:if test="${sessionScope.login_type eq '管理员'}">
                                                                             <button class="btn btn-transparent"
@@ -94,7 +99,7 @@
                                                                         <button class="btn btn-transparent"
                                                                                 data-toggle="tooltip"
                                                                                 data-placement="top" and title="删除"
-                                                                                onclick="del('${etps_info.etps_name}');">
+                                                                                onclick="del('${etps_info.iEtps_id}');">
                                                                             <i class="fa fa-times"></i></button>
                                                                         <c:if test="${etps_info.check_status eq '审核成功'}">
                                                                             <button class="btn btn-transparent"
@@ -145,7 +150,30 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="sm-modal" tabindex="-1" role="dialog" aria-labelledby="modal-small-label" style="display: none;">
+<!--重置密码-->
+<div class="modal fade" id="reset_pwd" tabindex="-1" role="dialog" aria-labelledby="modal-error-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-danger">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-error-label2"><i class="fa fa-warning"></i>Are you sure?</h4>
+            </div>
+            <div class="modal-body">
+                你确定要重置该商户的登录密码吗？
+                <input id="text2" type="hidden">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        onclick="sure_reset($('#text2').val())">确定
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--二维码-->
+<div class="modal fade" id="sm-modal" tabindex="-1" role="dialog" aria-labelledby="modal-small-label">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header state modal-primary">
@@ -161,13 +189,30 @@
         </div>
     </div>
 </div>
+<!--密码弹出框-->
+<div class="modal fade" id="pwd" tabindex="-1" role="dialog" aria-labelledby="modal-small-label">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="modal-small-label2">重置密码</h4>
+            </div>
+            <div class="modal-body" id="pwd_alert" style="text-align: center;padding-left: 17%;font-size: larger;font-weight: bold">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script type="text/javascript">
-    function del(user_name) {
+    function del(iEtps_id) {
         $('#del').modal({
             keyboard: true
         });
-        $('#text').val(user_name);
+        $('#text').val(iEtps_id);
     }
     function create_this() {
         document.getElementById("qr").innerHTML="";
@@ -176,6 +221,35 @@
             height : 200
         });
         qrcode.makeCode("<%=AliPayConfig.ISV_AUTH%>");
+    }
+    function reset_pwd(iEtps_id) {
+        $('#reset_pwd').modal({
+            keyboard: true
+        });
+        $('#text2').val(iEtps_id);
+    }
+    function sure_reset(iEtps_id) {
+        $.ajax({
+            url:"/etps/reset_pwd",
+            type:"post",
+            data:{"iEtps_id":iEtps_id},
+            dataType:"json",
+            success:function (result) {
+                if(result.code=="1"){
+                    $('#pwd').modal({
+                        keyboard: true
+                    });
+                    $('#pwd_alert').html("请注意保管："+result.desc);
+                }else{
+                    iziToast.error({
+                        message:result.desc,
+                        position:'topRight',
+                        timeout:'3000'
+                    });
+                }
+            }
+
+        });
     }
 </script>
 </body>

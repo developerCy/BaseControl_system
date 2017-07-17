@@ -93,7 +93,6 @@ public class LoginController {
                     return;
                 }
                 session.setAttribute("user", user.get(0));
-                session.setAttribute("iAgent_name", user_name);
                 session.setAttribute("login_type", user.get(0).getLogin_type());
                 session.setAttribute("iAgent_id", user.get(0).getiAgent_id());
                 /**
@@ -105,17 +104,7 @@ public class LoginController {
                     session.setAttribute("message_num", message_list.size());
                 }
             }
-            String login_token = request.getRemoteAddr();
-            /**
-             * 保存登陆地址
-             */
-            jedis.hset("login_token", user_name, login_token);
-
-            JsonUtil.sendJson(response, Config.SUCCESS);
-        } catch (JedisConnectionException e) {
-            log.error("redis连接异常..");
-            JsonUtil.sendJson(response, Config.ERROR("redis连接异常.."));
-            return;
+            JsonUtil.sendJson(response, Config.SUCCESS(null));
         } catch (Exception e) {
             e.printStackTrace();
             JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
@@ -172,7 +161,7 @@ public class LoginController {
                 map.put("iAgent_name", request.getParameter("iAgent_name"));
                 List<User> list = ps_userinfo_service.select_user_byName(map);
                 if (!list.isEmpty()) {
-                    model.addAttribute("error", Config.USER_EXIST);
+                    model.addAttribute("error", Config.ERROR("用户不存在！"));
                     return new ModelAndView("../error");
                 }
                 user.setiAgent_name(iAgent_name);
@@ -203,14 +192,8 @@ public class LoginController {
     @RequestMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Jedis jedis = new Jedis(Config.REDIS_IP, Config.REDIS_PORT);
-            jedis.hdel("login_token", UserUtil.getUser_name(request));
             request.getSession().invalidate();
             response.sendRedirect("/login.html");
-        } catch (JedisConnectionException e) {
-            log.error("redis连接异常..");
-            JsonUtil.sendJson(response, Config.ERROR("redis连接异常.."));
-            return;
         } catch (IOException e) {
             e.printStackTrace();
             JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
@@ -249,7 +232,7 @@ public class LoginController {
     @RequestMapping("/my_message")
     public ModelAndView my_message(Model model,HttpServletRequest request) {
         try {
-            List<Map<String, String>> list=ps_userinfo_service.select_message(UserUtil.getLogin_iAgent_id(request));
+            List<Map<String, String>> list=ps_userinfo_service.select_message(UserUtil.getUser_id(request));
             model.addAttribute("message_list",list);
             return new ModelAndView("my_message");
         } catch (JedisConnectionException e) {

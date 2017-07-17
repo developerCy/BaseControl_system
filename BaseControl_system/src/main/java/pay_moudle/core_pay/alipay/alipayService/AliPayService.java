@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
  */
 public interface AliPayService {
     String Ali_trade_pay(JSONObject json) throws UnsupportedEncodingException, AlipayApiException;
-    String Ali_precreate_trade_pay(JSONObject json) throws AlipayApiException;
     String Ali_refund(JSONObject json) throws AlipayApiException;
     String Ali_query(JSONObject json) throws AlipayApiException;
     String Ali_cancel(JSONObject json) throws AlipayApiException;

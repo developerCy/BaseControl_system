@@ -31,7 +31,6 @@ public class Interceptor implements HandlerInterceptor {
          * 2.token验证
          */
         try {
-            Jedis jedis = new Jedis(Config.REDIS_IP, Config.REDIS_PORT);
             if (!request.getRequestURI().startsWith("/user/login")) {
                 log.info("发生路径检查：" + request.getRequestURL());
                 /**
@@ -44,21 +43,8 @@ public class Interceptor implements HandlerInterceptor {
                      * 如果异地登陆，原地址将被踢出下线
                      */
                 }
-                if("商户".equals(UserUtil.getLogin_type(request))){
-                    if (!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getEtps_name(request)))) {
-                        response.sendRedirect("/login.html");
-                        return false;
-                    }
-                }else if(!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getUser_name(request)))){
-                        response.sendRedirect("/login.html");
-                        return false;
-                    }
             }
             return true;
-        } catch (JedisConnectionException e) {
-            log.error("redis连接异常..");
-            JsonUtil.sendJson(response, Config.ERROR("redis连接异常.."));
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
             JsonUtil.sendJson(response, Config.ERROR(e.getMessage()));
@@ -75,7 +61,7 @@ public class Interceptor implements HandlerInterceptor {
  * 获取站内信
  */
         if("渠道商".equals(UserUtil.getLogin_type(request))){
-            List<Map<String, String>> message_list = ps_userinfo_service.select_message(UserUtil.getLogin_iAgent_id(request));
+            List<Map<String, String>> message_list = ps_userinfo_service.select_message(UserUtil.getUser_id(request));
             if (!message_list.isEmpty()) {
                 request.getSession().setAttribute("message", message_list);
                 request.getSession().setAttribute("message_num", message_list.size());
