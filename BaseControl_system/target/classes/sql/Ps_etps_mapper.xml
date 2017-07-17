@@ -89,7 +89,7 @@
         </if>
     </delete>
     <select id="select_checked_all" parameterType="java.lang.String" resultType="java.lang.String">
-       SELECT count(*) as total,check_status FROM etps_info WHERE check_status=#{check_status}
+       SELECT count(*) as total FROM etps_info WHERE check_status=#{check_status}
     </select>
     <select id="select_use_all" resultType="java.lang.String">
         SELECT count(*) as total FROM etps_info WHERE status='已开通'

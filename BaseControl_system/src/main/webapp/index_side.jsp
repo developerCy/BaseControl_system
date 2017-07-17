@@ -40,6 +40,7 @@
                             </ul>
                         </li>
                     </c:if>
+                    <c:if test="${sessionScope.login_type !='商户'}">
                         <li class="has-child-item close-item">
                             <a><i class="fa fa-steam" aria-hidden="true"></i><span>入网信息审核</span></a>
                             <ul class="nav child-nav level-1">
@@ -51,6 +52,7 @@
                                 </c:if>
                             </ul>
                         </li>
+                    </c:if>
                     <li class="has-child-item close-item">
                         <a><i class="fa fa-table" aria-hidden="true"></i><span>交易管理</span></a>
                         <ul class="nav child-nav level-1">

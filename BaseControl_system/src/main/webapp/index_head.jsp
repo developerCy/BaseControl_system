@@ -59,8 +59,8 @@
                     <img src="<%=path%>/scripts/main_scripts/images/wolf.gif" height="35px;"alt="Jane Doe" />
                 </div>
                 <div class="user-info">
-                    <span class="user-name">${sessionScope.iAgent_name}</span>
-                    <span class="user-profile">${sessionScope.login_type}</span>
+                    <span class="user-name"><%=UserUtil.getUser_name(request)%></span>
+                    <span class="user-profile"><%=UserUtil.getLogin_type(request)%></span>
                 </div>
                 <i class="fa fa-plus icon-open" aria-hidden="true"></i>
                 <i class="fa fa-minus icon-close" aria-hidden="true"></i>
@@ -68,7 +68,12 @@
             <div class="user-options dropdown-box">
                 <div class="drop-content basic">
                     <ul>
-                        <li><a href="<%=path%>/user/edit?sign=sel_one&iAgent_id=<%=UserUtil.getLogin_iAgent_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
+                        <c:if test="${sessionScope.login_type eq '管理员'}">
+                            <li><a href="<%=path%>/user/edit?sign=sel_one&iAgent_id=<%=UserUtil.getUser_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
+                        </c:if>
+                        <c:if test="${sessionScope.login_type eq '渠道商'}">
+                            <li><a href="<%=path%>/etps/edit?sign=sel_one&iEtps_id=<%=UserUtil.getUser_id(request)%>"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a></li>
+                        </c:if>
                     </ul>
                 </div>
             </div>

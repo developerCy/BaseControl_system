@@ -93,7 +93,6 @@ public class LoginController {
                     return;
                 }
                 session.setAttribute("user", user.get(0));
-                session.setAttribute("iAgent_name", user_name);
                 session.setAttribute("login_type", user.get(0).getLogin_type());
                 session.setAttribute("iAgent_id", user.get(0).getiAgent_id());
                 /**
@@ -249,7 +248,7 @@ public class LoginController {
     @RequestMapping("/my_message")
     public ModelAndView my_message(Model model,HttpServletRequest request) {
         try {
-            List<Map<String, String>> list=ps_userinfo_service.select_message(UserUtil.getLogin_iAgent_id(request));
+            List<Map<String, String>> list=ps_userinfo_service.select_message(UserUtil.getUser_id(request));
             model.addAttribute("message_list",list);
             return new ModelAndView("my_message");
         } catch (JedisConnectionException e) {

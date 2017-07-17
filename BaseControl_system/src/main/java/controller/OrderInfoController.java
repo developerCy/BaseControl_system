@@ -31,7 +31,7 @@ public class OrderInfoController {
     @RequestMapping("/select_all_etps_order_info")
     public ModelAndView select_all_etps_order_info(Model model, HttpServletRequest request, HttpServletResponse response){
         try{
-            String iAgent_id=UserUtil.getLogin_iAgent_id(request);
+            String iAgent_id=UserUtil.getUser_id(request);
             Map<String,String> map=new HashMap<String,String>();
             map.put("iAgent_id",iAgent_id);
             List<Map<String,String>> order_info= ps_orderinfo_service.select_etps_order_info(map);

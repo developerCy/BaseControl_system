@@ -44,15 +44,10 @@ public class Interceptor implements HandlerInterceptor {
                      * 如果异地登陆，原地址将被踢出下线
                      */
                 }
-                if("商户".equals(UserUtil.getLogin_type(request))){
-                    if (!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getEtps_name(request)))) {
-                        response.sendRedirect("/login.html");
-                        return false;
-                    }
-                }else if(!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getUser_name(request)))){
-                        response.sendRedirect("/login.html");
-                        return false;
-                    }
+                if (!request.getRemoteAddr().equals(jedis.hget("login_token", UserUtil.getUser_name(request)))) {
+                    response.sendRedirect("/login.html");
+                    return false;
+                }
             }
             return true;
         } catch (JedisConnectionException e) {
@@ -75,7 +70,7 @@ public class Interceptor implements HandlerInterceptor {
  * 获取站内信
  */
         if("渠道商".equals(UserUtil.getLogin_type(request))){
-            List<Map<String, String>> message_list = ps_userinfo_service.select_message(UserUtil.getLogin_iAgent_id(request));
+            List<Map<String, String>> message_list = ps_userinfo_service.select_message(UserUtil.getUser_id(request));
             if (!message_list.isEmpty()) {
                 request.getSession().setAttribute("message", message_list);
                 request.getSession().setAttribute("message_num", message_list.size());

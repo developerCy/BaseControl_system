@@ -42,7 +42,7 @@ public class StoreInfoController {
                 count=ps_store_service.select_count(null);
             }
             if("渠道商".equals(login_type)){
-                String iAgent_id=UserUtil.getLogin_iAgent_id(request);
+                String iAgent_id=UserUtil.getUser_id(request);
                 Store_info store_info=new Store_info();
                 store_info.setiAgent_id(iAgent_id);
                 list=ps_store_service.select_etps_order_info(store_info);

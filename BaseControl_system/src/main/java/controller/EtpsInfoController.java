@@ -41,7 +41,7 @@ public class EtpsInfoController {
     public ModelAndView etpsinfo_list(Model model, HttpServletRequest request) {
         try {
             String login_type = UserUtil.getLogin_type(request);
-            String iAgent_id=UserUtil.getLogin_iAgent_id(request);
+            String iAgent_id=UserUtil.getUser_id(request);
             if ("管理员".equals(login_type)) {
                 List<EtpsInfo> etpsInfoList = ps_etps_service.select_etpsinfo(null);
                 String use_all=ps_etps_service.select_use_all();
@@ -104,7 +104,7 @@ public class EtpsInfoController {
         try {
             EtpsInfo etpsInfo = new EtpsInfo();
             etpsInfo.setiEtps_id(iEtps_id);
-            etpsInfo.setiAgent_id(UserUtil.getLogin_iAgent_id(request));
+            etpsInfo.setiAgent_id(UserUtil.getUser_id(request));
             etpsInfo.setiAgent_name(UserUtil.getUser_name(request));
             etpsInfo.setContact_name(contact_name);
             etpsInfo.setContact_phone(contact_phone);
@@ -249,7 +249,7 @@ public class EtpsInfoController {
                 list=ps_etps_service.select_etpsinfo(null);
             }
             if("渠道商".equals(UserUtil.getLogin_type(request))){
-                String iAgent_id=UserUtil.getLogin_iAgent_id(request);
+                String iAgent_id=UserUtil.getUser_id(request);
                 Map<String,String> map=new HashMap<String, String>();
                 map.put("iAgent_id",iAgent_id);
                 list=ps_etps_service.select_etpsinfo(map);
